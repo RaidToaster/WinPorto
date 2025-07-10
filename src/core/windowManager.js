@@ -145,17 +145,22 @@ function handleMouseDown(event) {
 
     // 2. Check for Start Menu click
     if (isMenuOpen) {
+        console.log('WindowManager: Start menu is open, checking for click within menu bounds.');
         const menuX = 0;
-        const menuY = canvas.height - 300 - 40;
-        if (mouseX > menuX && mouseX < menuX + 200 && mouseY > menuY && mouseY < menuY + 300) {
-            const itemIndex = Math.floor((mouseY - menuY) / 30); // 30 is item height
-            if (itemIndex >= 0 && itemIndex < menuItems.length) {
-                const clickedItem = menuItems[itemIndex];
-                // Delegate click handling to startMenu.js
-                handleStartMenuClick(event);
-                // The toggleStartMenu is already called inside handleStartMenuClick
-                return;
-            }
+        const menuY = canvas.height - 450 - 30; // MENU_HEIGHT (450) and TASKBAR_HEIGHT (30) from startMenu.js
+        const menuWidth = 350; // MENU_WIDTH from startMenu.js
+        const menuHeight = 450; // MENU_HEIGHT from startMenu.js
+
+        if (mouseX >= menuX && mouseX <= menuX + menuWidth &&
+            mouseY >= menuY && mouseY <= menuY + menuHeight) {
+            console.log('WindowManager: Click detected within Start Menu bounds. Delegating to handleStartMenuClick.');
+            handleStartMenuClick(event);
+            // handleStartMenuClick will close the menu and stop propagation if an item is clicked.
+            // If no item is clicked within the menu, the event might still propagate.
+            return; // Crucial: Exit to prevent further processing by windowManager or desktop
+        } else {
+            console.log('WindowManager: Click outside Start Menu bounds, but menu is open. Allowing event to propagate to desktop.');
+            // Do not return here, let desktop.js handle closing the menu if it's a click outside.
         }
     }
 
@@ -226,13 +231,13 @@ function handleMouseMove(event) {
         const closeButtonSize = 20;
 
         const isHoveringCloseButton = mouseX > closeButtonX && mouseX < closeButtonX + closeButtonSize &&
-                                      mouseY > closeButtonY && mouseY < closeButtonY + closeButtonSize;
+            mouseY > closeButtonY && mouseY < closeButtonY + closeButtonSize;
 
         const resizeHandleX = win.x + win.width - RESIZE_HANDLE_SIZE;
         const resizeHandleY = win.y + win.height - RESIZE_HANDLE_SIZE;
 
         const isHoveringResizeHandle = mouseX > resizeHandleX && mouseY > resizeHandleY &&
-                                       mouseX < win.x + win.width && mouseY < win.y + win.height;
+            mouseX < win.x + win.width && mouseY < win.y + win.height;
 
         if (isHoveringResizeHandle) {
             cursorStyle = 'nwse-resize';
@@ -243,7 +248,7 @@ function handleMouseMove(event) {
             hoveredWindow = win;
             break;
         } else if (mouseY < win.y + TITLE_BAR_HEIGHT && mouseX > win.x && mouseX < win.x + win.width &&
-                   mouseY > win.y) { // Only consider title bar if mouse is within its Y bounds
+            mouseY > win.y) { // Only consider title bar if mouse is within its Y bounds
             cursorStyle = 'grab';
             hoveredWindow = win;
             break;
@@ -256,7 +261,7 @@ function handleMouseMove(event) {
         const closeButtonY = win.y + 5;
         const closeButtonSize = 20;
         const isHoveringCloseButton = mouseX > closeButtonX && mouseX < closeButtonX + closeButtonSize &&
-                                      mouseY > closeButtonY && mouseY < closeButtonY + closeButtonSize;
+            mouseY > closeButtonY && mouseY < closeButtonY + closeButtonSize;
 
         if (win.isCloseButtonHovered !== isHoveringCloseButton) {
             win.isCloseButtonHovered = isHoveringCloseButton;

@@ -46,7 +46,7 @@ function renderTaskbar() {
         startButtonGradient.addColorStop(0, '#3D9B3D');
         startButtonGradient.addColorStop(1, '#2A6E2A');
     }
-    
+
     ctx.fillStyle = startButtonGradient;
     const cornerRadius = 8; // Radius for the rounded corner
     ctx.beginPath();
@@ -54,12 +54,12 @@ function renderTaskbar() {
     ctx.lineTo(0, canvas.height - TASKBAR_HEIGHT); // Line to top-left
     ctx.lineTo(START_BUTTON_WIDTH - cornerRadius, canvas.height - TASKBAR_HEIGHT); // Line to just before top-right curve
     ctx.arcTo(START_BUTTON_WIDTH, canvas.height - TASKBAR_HEIGHT, // Control point 1 (top-right corner)
-              START_BUTTON_WIDTH, canvas.height - TASKBAR_HEIGHT + cornerRadius, // Control point 2 (start of vertical line after curve)
-              cornerRadius); // Radius
+        START_BUTTON_WIDTH, canvas.height - TASKBAR_HEIGHT + cornerRadius, // Control point 2 (start of vertical line after curve)
+        cornerRadius); // Radius
     ctx.lineTo(START_BUTTON_WIDTH, canvas.height); // Line to bottom-right
     ctx.closePath(); // Close path to bottom-left
     ctx.fill();
-    
+
     // Draw Start Button Icon
     if (startIcon.complete) {
         const iconSize = 24; // Adjust size as needed
@@ -114,8 +114,9 @@ function handleTaskbarClick(event) {
 
     if (mouseX > startButtonX && mouseX < startButtonRight &&
         mouseY > startButtonY && mouseY < startButtonBottom) {
+        console.log('Taskbar: Start button area clicked, calling toggleStartMenu.'); // Debugging log
         toggleStartMenu();
-        console.log('Start button clicked!'); // For debugging
+        event.stopPropagation(); // Prevent event from bubbling up to desktop
     }
 }
 
@@ -144,4 +145,4 @@ export function handleTaskbarMouseMove(event) {
 
 canvas.addEventListener('mousemove', handleTaskbarMouseMove);
 
-export { renderTaskbar, handleTaskbarClick, TASKBAR_HEIGHT };
+export { renderTaskbar, handleTaskbarClick, TASKBAR_HEIGHT, START_BUTTON_WIDTH };

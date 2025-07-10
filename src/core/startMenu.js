@@ -28,11 +28,17 @@ function toggleStartMenu() {
     }
 }
 
+function closeStartMenu() {
+    isMenuOpen = false;
+    console.log('Start menu closed. isMenuOpen:', isMenuOpen);
+    hoveredMenuItemIndex = -1;
+}
+
 function renderStartMenu() {
     if (!isMenuOpen) return;
 
     const menuX = 0;
-    const menuY = canvas.height - MENU_HEIGHT - 30; // 30 is new taskbar height
+    const menuY = canvas.height - MENU_HEIGHT - 30;
 
     // Left Panel (darker)
     ctx.fillStyle = '#245EDC';
@@ -101,7 +107,8 @@ function handleStartMenuClick(event) {
 
             if (mouseX > itemX && mouseX < itemX + itemWidth &&
                 mouseY > itemY && mouseY < itemY + itemHeight) {
-                console.log(`Clicked on menu item: ${item.name}`); // Debugging log
+                console.log(`StartMenu: Clicked on menu item: ${item.name}`); // Debugging log
+                event.stopPropagation(); // Stop event from bubbling further
 
                 // Execute action based on item
                 switch (item.action) {
@@ -115,7 +122,6 @@ function handleStartMenuClick(event) {
                         loadApp('Contact');
                         break;
                     case 'show_games_submenu':
-                        // Implement games submenu logic here
                         console.log('Games submenu not yet implemented.');
                         break;
                     case 'close_all_windows':
@@ -124,7 +130,7 @@ function handleStartMenuClick(event) {
                     default:
                         console.log('Unknown menu item action:', item.action);
                 }
-                toggleStartMenu(); // Close menu after click
+                closeStartMenu(); // Close menu after click
                 return; // Stop processing after finding a match
             }
         });
@@ -166,7 +172,6 @@ function handleStartMenuMouseMove(event) {
 
     if (newHoveredIndex !== hoveredMenuItemIndex) {
         hoveredMenuItemIndex = newHoveredIndex;
-        // Trigger a re-render of the start menu
         renderStartMenu();
     }
 }

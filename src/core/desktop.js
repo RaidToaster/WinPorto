@@ -1,7 +1,8 @@
 import { ctx, canvas } from './canvas.js';
 import { loadApp } from './appRegistry.js';
-import { handleTaskbarClick, TASKBAR_HEIGHT, handleTaskbarMouseMove } from './taskbar.js';
-import { isMenuOpen, handleStartMenuClick, handleStartMenuMouseMove } from './startMenu.js';
+import { handleTaskbarClick, TASKBAR_HEIGHT, handleTaskbarMouseMove, START_BUTTON_WIDTH } from './taskbar.js';
+import { isMenuOpen, handleStartMenuClick, handleStartMenuMouseMove, toggleStartMenu } from './startMenu.js';
+import { windows } from './windowManager.js';
 
 const wallpaper = new Image();
 let wallpaperLoaded = false;
@@ -69,24 +70,75 @@ function handleDesktopClick(event) {
     const mouseX = event.clientX;
     const mouseY = event.clientY;
 
-    console.log('Desktop click detected. isMenuOpen:', isMenuOpen); // Debugging log
+    if (isMouseOverWindow(mouseX, mouseY)) {
+        return; // Mouse is over a window, do not process desktop click
+    }
 
-    // If the start menu is open, delegate click to start menu handler
+    const MENU_WIDTH = 350;
+    const MENU_HEIGHT = 450;
+    const menuX = 0;
+    const menuY = canvas.height - MENU_HEIGHT - TASKBAR_HEIGHT;
+
     if (isMenuOpen) {
-        console.log('Start menu is open, delegating click to start menu handler.'); // Debugging log
-        handleStartMenuClick(event);
+        if (mouseX >= menuX && mouseX <= menuX + MENU_WIDTH &&
+            mouseY >= menuY && mouseY <= menuY + MENU_HEIGHT) {
+            handleStartMenuClick(event);
+        } else {
+            // Check if click is on the start button area
+            const startButtonX = 0;
+            const startButtonY = canvas.height - TASKBAR_HEIGHT;
+            const startButtonRight = START_BUTTON_WIDTH;
+            const startButtonBottom = canvas.height;
+
+            if (mouseX >= startButtonX && mouseX <= startButtonRight &&
+                mouseY >= startButtonY && mouseY <= startButtonBottom) {
+                // Clicked on the start button area, do nothing as it's handled by taskbar.js
+                console.log('Desktop: Click on start button area, ignoring to prevent menu re-toggle.');
+            } else {
+                // Click outside menu and not on start button - close it
+                console.log('Desktop click outside menu, closing start menu.'); // Debugging log
+                toggleStartMenu();
+            }
+        }
         return;
     }
 
     // Check if the click is on the taskbar
     if (mouseY > canvas.height - TASKBAR_HEIGHT) {
         handleTaskbarClick(event);
-        return; // Prevent desktop icon logic from running
+        return;
+    }
+
+    // No action for desktop clicks when menu is closed
+}
+
+function isMouseOverWindow(mouseX, mouseY) {
+    for (let i = windows.length - 1; i >= 0; i--) {
+        const win = windows[i];
+        if (mouseX > win.x && mouseX < win.x + win.width &&
+            mouseY > win.y && mouseY < win.y + win.height) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function handleDesktopDoubleClick(event) {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    if (isMouseOverWindow(mouseX, mouseY)) {
+        return; // Mouse is over a window, do not process desktop double click
     }
 
     icons.forEach(icon => {
-        if (mouseX > icon.x && mouseX < icon.x + icon.width &&
-            mouseY > icon.y && mouseY < icon.y + icon.height) {
+        const highlightSize = icon.width + 10;
+        const highlightX = icon.x - 5;
+        const highlightY = icon.y - 5;
+        const highlightHeight = highlightSize + 25;
+
+        if (mouseX > highlightX && mouseX < highlightX + highlightSize &&
+            mouseY > highlightY && mouseY < highlightY + highlightHeight) {
             loadApp(icon.app);
         }
     });
@@ -96,6 +148,20 @@ function handleCanvasMouseMove(event) {
     const mouseX = event.clientX;
     const mouseY = event.clientY;
     let needsRender = false;
+
+    if (isMouseOverWindow(mouseX, mouseY)) {
+        // If mouse is over a window, ensure no desktop icons are hovered
+        icons.forEach(icon => {
+            if (icon.isHovered) {
+                icon.isHovered = false;
+                needsRender = true;
+            }
+        });
+        if (needsRender) {
+            renderDesktop();
+        }
+        return; // Stop further processing for desktop mouse move
+    }
 
     if (isMenuOpen) {
         handleStartMenuMouseMove(event);
@@ -129,6 +195,7 @@ function handleCanvasMouseMove(event) {
 }
 
 canvas.addEventListener('click', handleDesktopClick);
+canvas.addEventListener('dblclick', handleDesktopDoubleClick);
 canvas.addEventListener('mousemove', handleCanvasMouseMove);
 
 
