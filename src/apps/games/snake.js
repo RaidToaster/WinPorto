@@ -1,0 +1,1 @@
+// Game: Snake - Placeholder for the Snake minigame.
