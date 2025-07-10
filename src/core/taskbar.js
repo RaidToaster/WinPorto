@@ -70,7 +70,7 @@ function renderTaskbar() {
 
     // Draw Start Button Text
     ctx.fillStyle = 'white';
-    ctx.font = 'bold italic 20px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+    ctx.font = 'bold italic 20px "Franklin Gothic Medium", "Franklin Gothic", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillText('start', 15 + 24 + 5, canvas.height - TASKBAR_HEIGHT / 2); // Adjust text position

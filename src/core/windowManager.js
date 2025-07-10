@@ -15,6 +15,8 @@ const CORNER_RADIUS = 8;
 const closeIcon = new Image();
 closeIcon.src = 'Windows XP Icons/Exit.png';
 
+const RESIZE_HANDLE_SIZE = 15;
+
 function createWindow(title, contentCallback) {
     const newWindow = {
         id: nextWindowId++,
@@ -24,6 +26,8 @@ function createWindow(title, contentCallback) {
         width: 400,
         height: 300,
         isDragging: false,
+        isResizing: false,
+        isCloseButtonHovered: false,
         dragOffsetX: 0,
         dragOffsetY: 0,
         contentCallback,
@@ -91,7 +95,17 @@ function renderWindows() {
         const closeButtonX = win.x + win.width - 25;
         const closeButtonY = win.y + 5;
         const closeButtonSize = 20;
-        // Draw the close icon
+
+        // Draw Close Button Background (hover effect)
+        if (win.isCloseButtonHovered) {
+            const closeButtonGradient = ctx.createLinearGradient(closeButtonX, closeButtonY, closeButtonX + closeButtonSize, closeButtonY + closeButtonSize);
+            closeButtonGradient.addColorStop(0, '#FF6B6B');
+            closeButtonGradient.addColorStop(1, '#E04343');
+            ctx.fillStyle = closeButtonGradient;
+            ctx.fillRect(closeButtonX, closeButtonY, closeButtonSize, closeButtonSize);
+        }
+
+        // Draw Close Button Icon
         if (closeIcon.complete) {
             ctx.drawImage(closeIcon, closeButtonX, closeButtonY, closeButtonSize, closeButtonSize);
         }
@@ -105,6 +119,17 @@ function renderWindows() {
             win.contentCallback(ctx, win);
             ctx.restore();
         }
+
+        // Draw Resize Handle
+        const handleX = win.x + win.width - RESIZE_HANDLE_SIZE;
+        const handleY = win.y + win.height - RESIZE_HANDLE_SIZE;
+        ctx.fillStyle = '#C0C0C0'; // A standard grey for the handle
+        ctx.beginPath();
+        ctx.moveTo(handleX, win.y + win.height);
+        ctx.lineTo(win.x + win.width, handleY);
+        ctx.lineTo(win.x + win.width, win.y + win.height);
+        ctx.closePath();
+        ctx.fill();
     });
 }
 
@@ -154,8 +179,12 @@ function handleMouseDown(event) {
         }
         activeWindow = clickedWindow;
 
-        // Check if clicking on title bar for dragging or closing
-        if (mouseY < clickedWindow.y + TITLE_BAR_HEIGHT) {
+        const resizeHandleX = clickedWindow.x + clickedWindow.width - RESIZE_HANDLE_SIZE;
+        const resizeHandleY = clickedWindow.y + clickedWindow.height - RESIZE_HANDLE_SIZE;
+
+        if (mouseX > resizeHandleX && mouseY > resizeHandleY) {
+            clickedWindow.isResizing = true;
+        } else if (mouseY < clickedWindow.y + TITLE_BAR_HEIGHT) {
             const closeButtonX = clickedWindow.x + clickedWindow.width - 25;
             const closeButtonY = clickedWindow.y + 5;
             if (mouseX > closeButtonX && mouseX < closeButtonX + 20 &&
@@ -165,8 +194,9 @@ function handleMouseDown(event) {
                     windows.splice(index, 1);
                 }
                 activeWindow = windows.length > 0 ? windows[windows.length - 1] : null;
+                // Reset hover state for all windows after a close operation
+                windows.forEach(win => win.isCloseButtonHovered = false);
             } else {
-                // Drag window
                 clickedWindow.isDragging = true;
                 clickedWindow.dragOffsetX = mouseX - clickedWindow.x;
                 clickedWindow.dragOffsetY = mouseY - clickedWindow.y;
@@ -175,19 +205,92 @@ function handleMouseDown(event) {
     } else {
         if (isMenuOpen) toggleStartMenu();
         activeWindow = null;
+        // Reset hover state for all windows when clicking outside
+        windows.forEach(win => win.isCloseButtonHovered = false);
     }
 }
 
 function handleMouseMove(event) {
-    if (activeWindow && activeWindow.isDragging) {
-        activeWindow.x = event.clientX - activeWindow.dragOffsetX;
-        activeWindow.y = event.clientY - activeWindow.dragOffsetY;
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    let needsRender = false;
+    let cursorStyle = 'default';
+
+    // Check for hover states and set cursor style
+    let hoveredWindow = null;
+    for (let i = windows.length - 1; i >= 0; i--) {
+        const win = windows[i];
+        const closeButtonX = win.x + win.width - 25;
+        const closeButtonY = win.y + 5;
+        const closeButtonSize = 20;
+
+        const isHoveringCloseButton = mouseX > closeButtonX && mouseX < closeButtonX + closeButtonSize &&
+                                      mouseY > closeButtonY && mouseY < closeButtonY + closeButtonSize;
+
+        const resizeHandleX = win.x + win.width - RESIZE_HANDLE_SIZE;
+        const resizeHandleY = win.y + win.height - RESIZE_HANDLE_SIZE;
+
+        const isHoveringResizeHandle = mouseX > resizeHandleX && mouseY > resizeHandleY &&
+                                       mouseX < win.x + win.width && mouseY < win.y + win.height;
+
+        if (isHoveringResizeHandle) {
+            cursorStyle = 'nwse-resize';
+            hoveredWindow = win;
+            break;
+        } else if (isHoveringCloseButton) {
+            cursorStyle = 'pointer';
+            hoveredWindow = win;
+            break;
+        } else if (mouseY < win.y + TITLE_BAR_HEIGHT && mouseX > win.x && mouseX < win.x + win.width &&
+                   mouseY > win.y) { // Only consider title bar if mouse is within its Y bounds
+            cursorStyle = 'grab';
+            hoveredWindow = win;
+            break;
+        }
+    }
+
+    // Update isCloseButtonHovered for all windows
+    windows.forEach(win => {
+        const closeButtonX = win.x + win.width - 25;
+        const closeButtonY = win.y + 5;
+        const closeButtonSize = 20;
+        const isHoveringCloseButton = mouseX > closeButtonX && mouseX < closeButtonX + closeButtonSize &&
+                                      mouseY > closeButtonY && mouseY < closeButtonY + closeButtonSize;
+
+        if (win.isCloseButtonHovered !== isHoveringCloseButton) {
+            win.isCloseButtonHovered = isHoveringCloseButton;
+            needsRender = true;
+        }
+    });
+
+    if (activeWindow) {
+        if (activeWindow.isDragging) {
+            activeWindow.x = mouseX - activeWindow.dragOffsetX;
+            activeWindow.y = mouseY - activeWindow.dragOffsetY;
+            needsRender = true;
+            cursorStyle = 'grabbing';
+        } else if (activeWindow.isResizing) {
+            const newWidth = mouseX - activeWindow.x;
+            const newHeight = mouseY - activeWindow.y;
+            activeWindow.width = Math.max(150, newWidth);
+            activeWindow.height = Math.max(100, newHeight);
+            needsRender = true;
+            cursorStyle = 'nwse-resize';
+        }
+    }
+
+    canvas.style.cursor = cursorStyle;
+
+    if (needsRender) {
+        renderWindows();
     }
 }
 
 function handleMouseUp(event) {
     if (activeWindow) {
         activeWindow.isDragging = false;
+        activeWindow.isResizing = false;
     }
 }
 

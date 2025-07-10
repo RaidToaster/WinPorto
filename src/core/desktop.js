@@ -11,9 +11,9 @@ wallpaper.onload = () => {
 };
 
 const icons = [
-    { name: 'About Me', app: 'About Me', img: new Image(), x: 30, y: 30, width: 48, height: 48},
-    { name: 'Projects', app: 'Projects', img: new Image(), x: 30, y: 120, width: 48, height: 48 },
-    { name: 'Contact', app: 'Contact', img: new Image(), x: 30, y: 210, width: 48, height: 48 },
+    { name: 'About Me', app: 'About Me', img: new Image(), x: 30, y: 30, width: 48, height: 48, isHovered: false },
+    { name: 'Projects', app: 'Projects', img: new Image(), x: 30, y: 120, width: 48, height: 48, isHovered: false },
+    { name: 'Contact', app: 'Contact', img: new Image(), x: 30, y: 210, width: 48, height: 48, isHovered: false },
 ];
 
 icons[0].img.src = './Windows XP Icons/User Accounts.png';
@@ -31,12 +31,37 @@ function renderDesktop() {
 
     // Render icons
     icons.forEach(icon => {
+        if (icon.isHovered) {
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            const highlightSize = icon.width + 40;
+            const highlightX = icon.x - 20;
+            const highlightY = icon.y - 15;
+            ctx.fillRect(highlightX, highlightY, highlightSize, highlightSize);
+        }
         ctx.drawImage(icon.img, icon.x, icon.y, icon.width, icon.height);
         ctx.fillStyle = 'white';
         ctx.font = '14px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+        // Draw drop shadow
+        ctx.save();
+        ctx.shadowColor = 'rgba(0,0,0,0.5)';
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetX = 1;
+        ctx.shadowOffsetY = 1;
         ctx.fillText(icon.name, icon.x + icon.width / 2, icon.y + icon.height + 15);
+        ctx.restore();
+
+        // Draw white text
+        ctx.fillStyle = 'white';
+        ctx.fillText(icon.name, icon.x + icon.width / 2, icon.y + icon.height + 15);
+
+        // Draw thin black stroke for clarity
+        ctx.save();
+        ctx.lineWidth = 0.05;
+        ctx.strokeStyle = 'black';
+        ctx.strokeText(icon.name, icon.x + icon.width / 2, icon.y + icon.height + 15);
+        ctx.restore();
     });
 }
 
@@ -68,10 +93,38 @@ function handleDesktopClick(event) {
 }
 
 function handleCanvasMouseMove(event) {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+    let needsRender = false;
+
     if (isMenuOpen) {
         handleStartMenuMouseMove(event);
     } else {
         handleTaskbarMouseMove(event);
+
+        // Check for desktop icon hover
+        let hoveredAnIcon = false;
+        icons.forEach(icon => {
+            const highlightSize = icon.width + 10;
+            const highlightX = icon.x - 5;
+            const highlightY = icon.y - 5;
+            const highlightHeight = highlightSize + 25; // Match the rendering height
+
+            const isHovering = mouseX > highlightX && mouseX < highlightX + highlightSize &&
+                mouseY > highlightY && mouseY < highlightY + highlightHeight;
+
+            if (icon.isHovered !== isHovering) {
+                icon.isHovered = isHovering;
+                needsRender = true;
+            }
+            if (isHovering) {
+                hoveredAnIcon = true;
+            }
+        });
+
+        if (needsRender) {
+            renderDesktop();
+        }
     }
 }
 
