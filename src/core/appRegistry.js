@@ -17,4 +17,5 @@ function loadApp(name) {
     }
 }
 
+
 export { registerApp, loadApp, apps };

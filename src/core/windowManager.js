@@ -123,7 +123,7 @@ function renderWindows() {
         // Draw Resize Handle
         const handleX = win.x + win.width - RESIZE_HANDLE_SIZE;
         const handleY = win.y + win.height - RESIZE_HANDLE_SIZE;
-        ctx.fillStyle = '#C0C0C0'; // A standard grey for the handle
+        ctx.fillStyle = '#797979ff';
         ctx.beginPath();
         ctx.moveTo(handleX, win.y + win.height);
         ctx.lineTo(win.x + win.width, handleY);
@@ -305,7 +305,7 @@ canvas.addEventListener('mouseup', handleMouseUp);
 
 
 function closeAll() {
-    windows.length = 0; // Clear the array
+    windows.length = 0;
     activeWindow = null;
 }
 

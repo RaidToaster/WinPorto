@@ -23,7 +23,7 @@ function aboutMeApp() {
     createWindow("About Me", (ctx, win) => {
         ctx.fillStyle = 'black';
         ctx.font = '16px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
-        const text = "Wow";
+        const text = "WowWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
         wrapText(ctx, text, win.x + 10, win.y + 50, win.width - 20, 25);
     });
 }

@@ -1,9 +1,33 @@
 import { ctx, canvas } from './canvas.js';
 import { loadApp } from './appRegistry.js';
 import { closeAll } from './windowManager.js';
+import { renderDesktop } from './desktop.js';
 
 let isMenuOpen = false;
 let hoveredMenuItemIndex = -1;
+
+function handleLogOff() {
+    console.log('Logging off...');
+    closeAll();
+    alert('You have been logged off.');
+    renderDesktop();
+}
+
+function handleShutdown() {
+    console.log('Shutting down...');
+    closeAll();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'black';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = 'white';
+    ctx.font = '30px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Shutting Down...', canvas.width / 2, canvas.height / 2);
+    alert('System is shutting down. Goodbye!');
+    canvas.removeEventListener('click', handleStartMenuClick);
+    canvas.removeEventListener('mousemove', handleStartMenuMouseMove);
+}
 
 const MENU_WIDTH = 350;
 const MENU_HEIGHT = 450;
@@ -18,13 +42,16 @@ const menuItems = [
     { name: 'Contact', action: 'launch_app_contact' },
     { name: 'Games', action: 'show_games_submenu' },
     { name: 'Close All Windows', action: 'close_all_windows' },
+    { name: 'Log Off', action: 'log_off' },
+    { name: 'Turn Off Computer', action: 'turn_off_computer' },
 ];
+
 
 function toggleStartMenu() {
     isMenuOpen = !isMenuOpen;
-    console.log('Start menu toggled. isMenuOpen:', isMenuOpen); // Debugging log
+    console.log('Start menu toggled. isMenuOpen:', isMenuOpen)
     if (!isMenuOpen) {
-        hoveredMenuItemIndex = -1; // Reset hover when menu closes
+        hoveredMenuItemIndex = -1;
     }
 }
 
@@ -39,6 +66,7 @@ function renderStartMenu() {
 
     const menuX = 0;
     const menuY = canvas.height - MENU_HEIGHT - 30;
+    const imageSize = 30
 
     // Left Panel (darker)
     ctx.fillStyle = '#245EDC';
@@ -58,7 +86,16 @@ function renderStartMenu() {
     ctx.font = 'bold 20px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText('Kevin P.M', menuX + HEADER_PADDING_X, menuY + (HEADER_HEIGHT / 2));
+    ctx.fillText('Kevin P.M', menuX + HEADER_PADDING_X + imageSize + 5, menuY + (HEADER_HEIGHT / 2));
+
+    // Render user image placeholder
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(menuX + HEADER_PADDING_X, menuY + 10, imageSize, imageSize);
+    // const userImage = new Image();
+    // userImage.src = 'path/to/user_image.png';
+    // userImage.onload = () => {
+    //     ctx.drawImage(userImage, menuX + HEADER_PADDING_X, menuY + 10, 30, 30);
+    // };
 
     // Render Menu Items on the left panel
     menuItems.forEach((item, index) => {
@@ -79,6 +116,34 @@ function renderStartMenu() {
         ctx.textBaseline = 'middle';
         ctx.fillText(item.name, menuX + 20, itemY + MENU_ITEM_HEIGHT / 2);
     });
+
+    // Render Log Off and Turn Off Computer buttons at the bottom
+    const buttonAreaY = menuY + MENU_HEIGHT - 40; // Position from bottom
+    const buttonWidth = LEFT_PANEL_WIDTH / 2 - 5; // Half of left panel width minus padding
+    const buttonHeight = 30;
+    const buttonPadding = 5;
+
+    // Log Off Button
+    const logOffButtonX = menuX + buttonPadding;
+    const logOffButtonY = buttonAreaY;
+    ctx.fillStyle = '#316AC5'; // Button background color
+    ctx.fillRect(logOffButtonX, logOffButtonY, buttonWidth, buttonHeight);
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 14px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Log Off', logOffButtonX + buttonWidth / 2, logOffButtonY + buttonHeight / 2);
+
+    // Turn Off Computer Button
+    const turnOffButtonX = menuX + LEFT_PANEL_WIDTH / 2 + buttonPadding;
+    const turnOffButtonY = buttonAreaY;
+    ctx.fillStyle = '#DC3545'; // Red button for shutdown
+    ctx.fillRect(turnOffButtonX, turnOffButtonY, buttonWidth, buttonHeight);
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 14px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Turn Off', turnOffButtonX + buttonWidth / 2, turnOffButtonY + buttonHeight / 2);
 
     // Menu Border
     ctx.strokeStyle = '#000080';
@@ -127,6 +192,12 @@ function handleStartMenuClick(event) {
                     case 'close_all_windows':
                         closeAll();
                         break;
+                    case 'log_off':
+                        handleLogOff();
+                        break;
+                    case 'turn_off_computer':
+                        handleShutdown();
+                        break;
                     default:
                         console.log('Unknown menu item action:', item.action);
                 }
@@ -134,6 +205,36 @@ function handleStartMenuClick(event) {
                 return; // Stop processing after finding a match
             }
         });
+    }
+
+    // Check for clicks on Log Off and Turn Off Computer buttons
+    const buttonAreaY = menuY + MENU_HEIGHT - 40;
+    const buttonWidth = LEFT_PANEL_WIDTH / 2 - 5;
+    const buttonHeight = 30;
+    const buttonPadding = 5;
+
+    // Log Off Button
+    const logOffButtonX = menuX + buttonPadding;
+    const logOffButtonY = buttonAreaY;
+    if (mouseX > logOffButtonX && mouseX < logOffButtonX + buttonWidth &&
+        mouseY > logOffButtonY && mouseY < logOffButtonY + buttonHeight) {
+        console.log('StartMenu: Clicked on Log Off button');
+        event.stopPropagation();
+        handleLogOff();
+        closeStartMenu();
+        return;
+    }
+
+    // Turn Off Computer Button
+    const turnOffButtonX = menuX + LEFT_PANEL_WIDTH / 2 + buttonPadding;
+    const turnOffButtonY = buttonAreaY;
+    if (mouseX > turnOffButtonX && mouseX < turnOffButtonX + buttonWidth &&
+        mouseY > turnOffButtonY && mouseY < turnOffButtonY + buttonHeight) {
+        console.log('StartMenu: Clicked on Turn Off Computer button');
+        event.stopPropagation();
+        handleShutdown();
+        closeStartMenu();
+        return;
     }
 }
 

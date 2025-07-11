@@ -25,11 +25,13 @@ const icons = [
     { name: 'About Me', app: 'About Me', img: new Image(), x: ICON_OFFSET_X, y: ICON_OFFSET_Y, width: 48, height: 48, isHovered: false, isSelected: false },
     { name: 'Projects', app: 'Projects', img: new Image(), x: ICON_OFFSET_X, y: ICON_OFFSET_Y + GRID_SIZE_Y, width: 48, height: 48, isHovered: false, isSelected: false },
     { name: 'Contact', app: 'Contact', img: new Image(), x: ICON_OFFSET_X, y: ICON_OFFSET_Y + GRID_SIZE_Y * 2, width: 48, height: 48, isHovered: false, isSelected: false },
+    { name: 'My Portfolio', app: 'My Portfolio', img: new Image(), x: ICON_OFFSET_X, y: ICON_OFFSET_Y + GRID_SIZE_Y * 3, width: 48, height: 48, isHovered: false, isSelected: false },
 ];
 
 icons[0].img.src = './Windows XP Icons/User Accounts.png';
 icons[1].img.src = './Windows XP Icons/Briefcase.png';
 icons[2].img.src = './Windows XP Icons/Email.png';
+icons[3].img.src = './Windows XP Icons/Explorer.png';
 
 function renderDesktop() {
     if (wallpaperLoaded) {
