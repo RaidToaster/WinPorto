@@ -12,9 +12,9 @@ wallpaper.onload = () => {
 };
 
 const icons = [
-    { name: 'About Me', app: 'About Me', img: new Image(), x: 30, y: 30, width: 48, height: 48, isHovered: false },
-    { name: 'Projects', app: 'Projects', img: new Image(), x: 30, y: 120, width: 48, height: 48, isHovered: false },
-    { name: 'Contact', app: 'Contact', img: new Image(), x: 30, y: 210, width: 48, height: 48, isHovered: false },
+    { name: 'About Me', app: 'About Me', img: new Image(), x: 30, y: 30, width: 48, height: 48, isHovered: false, isSelected: false },
+    { name: 'Projects', app: 'Projects', img: new Image(), x: 30, y: 120, width: 48, height: 48, isHovered: false, isSelected: false },
+    { name: 'Contact', app: 'Contact', img: new Image(), x: 30, y: 210, width: 48, height: 48, isHovered: false, isSelected: false },
 ];
 
 icons[0].img.src = './Windows XP Icons/User Accounts.png';
@@ -32,8 +32,8 @@ function renderDesktop() {
 
     // Render icons
     icons.forEach(icon => {
-        if (icon.isHovered) {
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+        if (icon.isHovered || icon.isSelected) {
+            ctx.fillStyle = icon.isSelected ? 'rgba(255, 255, 255, 0.5)' : 'rgba(255, 255, 255, 0.3)';
             const highlightSize = icon.width + 40;
             const highlightX = icon.x - 20;
             const highlightY = icon.y - 15;
@@ -71,7 +71,7 @@ function handleDesktopClick(event) {
     const mouseY = event.clientY;
 
     if (isMouseOverWindow(mouseX, mouseY)) {
-        return; // Mouse is over a window, do not process desktop click
+        return;
     }
 
     const MENU_WIDTH = 350;
@@ -109,7 +109,37 @@ function handleDesktopClick(event) {
         return;
     }
 
-    // No action for desktop clicks when menu is closed
+    // Handle desktop icon single click
+    let clickedOnIcon = false;
+    icons.forEach(icon => {
+        const highlightSize = icon.width + 10;
+        const highlightX = icon.x - 5;
+        const highlightY = icon.y - 5;
+        const highlightHeight = highlightSize + 25;
+
+        if (mouseX > highlightX && mouseX < highlightX + highlightSize &&
+            mouseY > highlightY && mouseY < highlightY + highlightHeight) {
+            // Single click on an icon
+            icons.forEach(i => i.isSelected = false); // Deselect all
+            icon.isSelected = true; // Select clicked icon
+            clickedOnIcon = true;
+            renderDesktop(); // Re-render to show selection
+        }
+    });
+
+    if (!clickedOnIcon) {
+        // If click is not on an icon, deselect all icons
+        let needsRender = false;
+        icons.forEach(icon => {
+            if (icon.isSelected) {
+                icon.isSelected = false;
+                needsRender = true;
+            }
+        });
+        if (needsRender) {
+            renderDesktop();
+        }
+    }
 }
 
 function isMouseOverWindow(mouseX, mouseY) {
@@ -128,7 +158,7 @@ function handleDesktopDoubleClick(event) {
     const mouseY = event.clientY;
 
     if (isMouseOverWindow(mouseX, mouseY)) {
-        return; // Mouse is over a window, do not process desktop double click
+        return;
     }
 
     icons.forEach(icon => {
@@ -150,7 +180,6 @@ function handleCanvasMouseMove(event) {
     let needsRender = false;
 
     if (isMouseOverWindow(mouseX, mouseY)) {
-        // If mouse is over a window, ensure no desktop icons are hovered
         icons.forEach(icon => {
             if (icon.isHovered) {
                 icon.isHovered = false;
@@ -160,7 +189,7 @@ function handleCanvasMouseMove(event) {
         if (needsRender) {
             renderDesktop();
         }
-        return; // Stop further processing for desktop mouse move
+        return;
     }
 
     if (isMenuOpen) {
