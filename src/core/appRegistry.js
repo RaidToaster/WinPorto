@@ -1,5 +1,3 @@
-// Core App Registry: Manages registration and loading of applications.
-
 const apps = new Map();
 
 function registerApp(name, icon, launchFunction) {

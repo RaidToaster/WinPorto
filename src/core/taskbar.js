@@ -97,7 +97,7 @@ function renderTaskbar() {
 
     // Draw Clock Text
     ctx.fillStyle = 'white';
-    ctx.font = '12px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
+    ctx.font = '13px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
     ctx.textAlign = 'center';
     const timeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     ctx.fillText(timeString, canvas.width - clockWidth / 2, canvas.height - TASKBAR_HEIGHT / 2);

@@ -20,7 +20,7 @@ function main() {
 
     // Main render loop
     function render() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Use clearRect for efficiency
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         renderDesktop();
         renderWindows();
         renderTaskbar();

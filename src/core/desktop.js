@@ -4,6 +4,16 @@ import { handleTaskbarClick, TASKBAR_HEIGHT, handleTaskbarMouseMove, START_BUTTO
 import { isMenuOpen, handleStartMenuClick, handleStartMenuMouseMove, toggleStartMenu } from './startMenu.js';
 import { windows } from './windowManager.js';
 
+const GRID_SIZE_X = 90;
+const GRID_SIZE_Y = 90;
+const ICON_OFFSET_X = 30;
+const ICON_OFFSET_Y = 30;
+
+let isDragging = false;
+let draggedIcon = null;
+let dragOffsetX = 0;
+let dragOffsetY = 0;
+
 const wallpaper = new Image();
 let wallpaperLoaded = false;
 wallpaper.src = 'src/background.jpg';
@@ -12,9 +22,9 @@ wallpaper.onload = () => {
 };
 
 const icons = [
-    { name: 'About Me', app: 'About Me', img: new Image(), x: 30, y: 30, width: 48, height: 48, isHovered: false, isSelected: false },
-    { name: 'Projects', app: 'Projects', img: new Image(), x: 30, y: 120, width: 48, height: 48, isHovered: false, isSelected: false },
-    { name: 'Contact', app: 'Contact', img: new Image(), x: 30, y: 210, width: 48, height: 48, isHovered: false, isSelected: false },
+    { name: 'About Me', app: 'About Me', img: new Image(), x: ICON_OFFSET_X, y: ICON_OFFSET_Y, width: 48, height: 48, isHovered: false, isSelected: false },
+    { name: 'Projects', app: 'Projects', img: new Image(), x: ICON_OFFSET_X, y: ICON_OFFSET_Y + GRID_SIZE_Y, width: 48, height: 48, isHovered: false, isSelected: false },
+    { name: 'Contact', app: 'Contact', img: new Image(), x: ICON_OFFSET_X, y: ICON_OFFSET_Y + GRID_SIZE_Y * 2, width: 48, height: 48, isHovered: false, isSelected: false },
 ];
 
 icons[0].img.src = './Windows XP Icons/User Accounts.png';
@@ -66,6 +76,36 @@ function renderDesktop() {
     });
 }
 
+function handleMouseDown(event) {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    if (isMouseOverWindow(mouseX, mouseY)) {
+        return;
+    }
+
+    // Check for icon drag start
+    icons.forEach(icon => {
+        const highlightSize = icon.width + 10;
+        const highlightX = icon.x - 5;
+        const highlightY = icon.y - 5;
+        const highlightHeight = highlightSize + 25;
+
+        if (mouseX > highlightX && mouseX < highlightX + highlightSize &&
+            mouseY > highlightY && mouseY < highlightY + highlightHeight) {
+            isDragging = true;
+            draggedIcon = icon;
+            dragOffsetX = mouseX - icon.x;
+            dragOffsetY = mouseY - icon.y;
+            // Select the icon when dragging starts
+            icons.forEach(i => i.isSelected = false);
+            icon.isSelected = true;
+            renderDesktop();
+            canvas.style.cursor = 'grabbing';
+        }
+    });
+}
+
 function handleDesktopClick(event) {
     const mouseX = event.clientX;
     const mouseY = event.clientY;
@@ -109,35 +149,37 @@ function handleDesktopClick(event) {
         return;
     }
 
-    // Handle desktop icon single click
-    let clickedOnIcon = false;
-    icons.forEach(icon => {
-        const highlightSize = icon.width + 10;
-        const highlightX = icon.x - 5;
-        const highlightY = icon.y - 5;
-        const highlightHeight = highlightSize + 25;
-
-        if (mouseX > highlightX && mouseX < highlightX + highlightSize &&
-            mouseY > highlightY && mouseY < highlightY + highlightHeight) {
-            // Single click on an icon
-            icons.forEach(i => i.isSelected = false); // Deselect all
-            icon.isSelected = true; // Select clicked icon
-            clickedOnIcon = true;
-            renderDesktop(); // Re-render to show selection
-        }
-    });
-
-    if (!clickedOnIcon) {
-        // If click is not on an icon, deselect all icons
-        let needsRender = false;
+    // Handle desktop icon single click (only if not dragging)
+    if (!isDragging) {
+        let clickedOnIcon = false;
         icons.forEach(icon => {
-            if (icon.isSelected) {
-                icon.isSelected = false;
-                needsRender = true;
+            const highlightSize = icon.width + 10;
+            const highlightX = icon.x - 5;
+            const highlightY = icon.y - 5;
+            const highlightHeight = highlightSize + 25;
+
+            if (mouseX > highlightX && mouseX < highlightX + highlightSize &&
+                mouseY > highlightY && mouseY < highlightY + highlightHeight) {
+                // Single click on an icon
+                icons.forEach(i => i.isSelected = false); // Deselect all
+                icon.isSelected = true; // Select clicked icon
+                clickedOnIcon = true;
+                renderDesktop(); // Re-render to show selection
             }
         });
-        if (needsRender) {
-            renderDesktop();
+
+        if (!clickedOnIcon) {
+            // If click is not on an icon, deselect all icons
+            let needsRender = false;
+            icons.forEach(icon => {
+                if (icon.isSelected) {
+                    icon.isSelected = false;
+                    needsRender = true;
+                }
+            });
+            if (needsRender) {
+                renderDesktop();
+            }
         }
     }
 }
@@ -178,6 +220,13 @@ function handleCanvasMouseMove(event) {
     const mouseX = event.clientX;
     const mouseY = event.clientY;
     let needsRender = false;
+
+    if (isDragging && draggedIcon) {
+        draggedIcon.x = mouseX - dragOffsetX;
+        draggedIcon.y = mouseY - dragOffsetY;
+        renderDesktop();
+        return;
+    }
 
     if (isMouseOverWindow(mouseX, mouseY)) {
         icons.forEach(icon => {
@@ -223,9 +272,56 @@ function handleCanvasMouseMove(event) {
     }
 }
 
+function handleMouseUp(event) {
+    if (isDragging && draggedIcon) {
+        snapToGrid(draggedIcon);
+        isDragging = false;
+        draggedIcon = null;
+        canvas.style.cursor = 'default';
+        renderDesktop();
+    }
+}
+
+function isGridOccupied(x, y, currentIcon) {
+    for (const icon of icons) {
+        if (icon !== currentIcon && icon.x === x && icon.y === y) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function snapToGrid(icon) {
+    let snappedX = Math.round((icon.x - ICON_OFFSET_X) / GRID_SIZE_X) * GRID_SIZE_X + ICON_OFFSET_X;
+    let snappedY = Math.round((icon.y - ICON_OFFSET_Y) / GRID_SIZE_Y) * GRID_SIZE_Y + ICON_OFFSET_Y;
+
+    if (isGridOccupied(snappedX, snappedY, icon)) {
+        let foundSlot = false;
+        for (let col = 0; col < canvas.width / GRID_SIZE_X; col++) {
+            for (let row = 0; row < (canvas.height - TASKBAR_HEIGHT) / GRID_SIZE_Y; row++) {
+                const potentialX = col * GRID_SIZE_X + ICON_OFFSET_X;
+                const potentialY = row * GRID_SIZE_Y + ICON_OFFSET_Y;
+
+                if (!isGridOccupied(potentialX, potentialY, icon)) {
+                    snappedX = potentialX;
+                    snappedY = potentialY;
+                    foundSlot = true;
+                    break;
+                }
+            }
+            if (foundSlot) break;
+        }
+    }
+
+    icon.x = snappedX;
+    icon.y = snappedY;
+}
+
+canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('click', handleDesktopClick);
 canvas.addEventListener('dblclick', handleDesktopDoubleClick);
 canvas.addEventListener('mousemove', handleCanvasMouseMove);
+canvas.addEventListener('mouseup', handleMouseUp);
 
 
 export { renderDesktop };

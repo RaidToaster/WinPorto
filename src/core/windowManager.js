@@ -23,8 +23,8 @@ function createWindow(title, contentCallback) {
         title,
         x: 50 + (windows.length % 10) * 30,
         y: 50 + (windows.length % 10) * 30,
-        width: 400,
-        height: 300,
+        width: 800,
+        height: 600,
         isDragging: false,
         isResizing: false,
         isCloseButtonHovered: false,
@@ -157,7 +157,7 @@ function handleMouseDown(event) {
             handleStartMenuClick(event);
             // handleStartMenuClick will close the menu and stop propagation if an item is clicked.
             // If no item is clicked within the menu, the event might still propagate.
-            return; // Crucial: Exit to prevent further processing by windowManager or desktop
+            return;
         } else {
             console.log('WindowManager: Click outside Start Menu bounds, but menu is open. Allowing event to propagate to desktop.');
             // Do not return here, let desktop.js handle closing the menu if it's a click outside.
