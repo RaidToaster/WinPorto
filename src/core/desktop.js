@@ -254,7 +254,7 @@ function handleCanvasMouseMove(event) {
             const highlightSize = icon.width + 10;
             const highlightX = icon.x - 5;
             const highlightY = icon.y - 5;
-            const highlightHeight = highlightSize + 25; // Match the rendering height
+            const highlightHeight = highlightSize + 25;
 
             const isHovering = mouseX > highlightX && mouseX < highlightX + highlightSize &&
                 mouseY > highlightY && mouseY < highlightY + highlightHeight;

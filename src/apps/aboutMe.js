@@ -1,30 +1,12 @@
 import { createWindow } from '../core/windowManager.js';
-
-function wrapText(context, text, x, y, maxWidth, lineHeight) {
-    const words = text.split(' ');
-    let line = '';
-
-    for (let n = 0; n < words.length; n++) {
-        const testLine = line + words[n] + ' ';
-        const metrics = context.measureText(testLine);
-        const testWidth = metrics.width;
-        if (testWidth > maxWidth && n > 0) {
-            context.fillText(line, x, y);
-            line = words[n] + ' ';
-            y += lineHeight;
-        } else {
-            line = testLine;
-        }
-    }
-    context.fillText(line, x, y);
-}
+import { wrapText } from '../core/canvas.js';
 
 function aboutMeApp() {
     createWindow("About Me", (ctx, win) => {
         ctx.fillStyle = 'black';
         ctx.font = '16px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
-        const text = "WowWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW";
-        wrapText(ctx, text, win.x + 10, win.y + 50, win.width - 20, 25);
+        const text = "Hello! I'm a passionate software developer with expertise in creating interactive web experiences. My skills include JavaScript, HTML5 Canvas, and responsive UI design. I enjoy solving complex problems and building applications that delight users. When I'm not coding, you can find me exploring new technologies or contributing to open-source projects.";
+        wrapText(text, win.x + 10, win.y + 50, win.width - 20, 25);
     });
 }
 

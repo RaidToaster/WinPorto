@@ -96,18 +96,18 @@ function renderWindows() {
         const closeButtonY = win.y + 5;
         const closeButtonSize = 20;
 
-        // Draw Close Button Background (hover effect)
-        if (win.isCloseButtonHovered) {
-            const closeButtonGradient = ctx.createLinearGradient(closeButtonX, closeButtonY, closeButtonX + closeButtonSize, closeButtonY + closeButtonSize);
-            closeButtonGradient.addColorStop(0, '#FF6B6B');
-            closeButtonGradient.addColorStop(1, '#E04343');
-            ctx.fillStyle = closeButtonGradient;
-            ctx.fillRect(closeButtonX, closeButtonY, closeButtonSize, closeButtonSize);
-        }
-
         // Draw Close Button Icon
         if (closeIcon.complete) {
             ctx.drawImage(closeIcon, closeButtonX, closeButtonY, closeButtonSize, closeButtonSize);
+        }
+
+        // Draw Close Button Background (hover effect)
+        if (win.isCloseButtonHovered) {
+            // const closeButtonGradient = ctx.createLinearGradient(closeButtonX, closeButtonY, closeButtonX + closeButtonSize, closeButtonY + closeButtonSize);
+            // closeButtonGradient.addColorStop(0, '#FF6B6B');
+            // closeButtonGradient.addColorStop(1, '#E04343');
+            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+            ctx.fillRect(closeButtonX, closeButtonY, closeButtonSize, closeButtonSize);
         }
 
 
