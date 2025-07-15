@@ -1,5 +1,6 @@
 import { createWindow } from '../core/windowManager.js';
 import portfolioData from '../assets/portfolio/portfolioData.js';
+import { wrapText } from '../core/canvas.js';
 
 // Define constants for layout
 const SIDEBAR_WIDTH = 180;
@@ -47,7 +48,7 @@ function explorerApp() {
             // Draw category name
             ctx.fillStyle = 'black';
             ctx.font = '14px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
-            ctx.fillText(category.name, win.x + 70, categoryY + ICON_SIZE / 2);
+            wrapText(category.name, win.x + 70, categoryY + ICON_SIZE / 2, SIDEBAR_WIDTH - 80, 14);
 
             categoryY += CATEGORY_SPACING;
         });
