@@ -32,7 +32,7 @@ html {
     background-color: #ECE9D8;
     border: 3px solid #0831d9;
     border-radius: 8px 8px 0 0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
 }
@@ -41,6 +41,28 @@ html {
     border-color: #0831d9;
     z-index: 100;
 }
+
+.window:not(.active) {
+    border: 3px solid transparent;
+    background-image: linear-gradient(to bottom, #ECE9D8, #ECE9D8), linear-gradient(rgb(118, 151, 231) 0%, rgb(126, 158, 227) 3%, rgb(148, 175, 232) 6%, rgb(151, 180, 233) 8%, rgb(130, 165, 228) 14%, rgb(124, 159, 226) 17%, rgb(121, 150, 222) 25%, rgb(123, 153, 225) 56%, rgb(130, 169, 233) 81%, rgb(128, 165, 231) 89%, rgb(123, 150, 225) 94%, rgb(122, 147, 223) 97%, rgb(171, 186, 227) 100%);
+    background-clip: padding-box, border-box;
+    background-origin: border-box;
+    background-repeat: no-repeat, no-repeat;
+}
+
+.window:not(.active) .title-bar {
+    background: linear-gradient(rgb(118, 151, 231) 0%, rgb(126, 158, 227) 3%, rgb(148, 175, 232) 6%, rgb(151, 180, 233) 8%, rgb(130, 165, 228) 14%, rgb(124, 159, 226) 17%, rgb(121, 150, 222) 25%, rgb(123, 153, 225) 56%, rgb(130, 169, 233) 81%, rgb(128, 165, 231) 89%, rgb(123, 150, 225) 94%, rgb(122, 147, 223) 97%, rgb(171, 186, 227) 100%);
+}
+
+.window:not(.active) .title-button {
+    background: linear-gradient(rgb(118, 151, 231) 0%, rgb(126, 158, 227) 3%, rgb(148, 175, 232) 6%, rgb(151, 180, 233) 8%, rgb(130, 165, 228) 14%, rgb(124, 159, 226) 17%, rgb(121, 150, 222) 25%, rgb(123, 153, 225) 56%, rgb(130, 169, 233) 81%, rgb(128, 165, 231) 89%, rgb(123, 150, 225) 94%, rgb(122, 147, 223) 97%, rgb(171, 186, 227) 100%);
+    opacity: 0.6;
+}
+
+.window:not(.active) .title-button:hover {
+    opacity: 0.4;
+}
+
 
 .title-bar {
     height: 30px;
@@ -136,8 +158,13 @@ html {
     min-width: 80px;
 }
 
+.window-buttons {
+    display: flex;
+    align-items: center;
+}
+
 .start-button {
-    width: 87px;
+    width: 89px;
     height: 28px;
     border: none;
     cursor: pointer;
@@ -154,7 +181,6 @@ html {
     width: 100%;
     height: 100%;
     background-color: transparent;
-    transition: background-color 0.2s;
 }
 
 .start-button:hover::after {
@@ -163,32 +189,49 @@ html {
 
 .window-buttons {
     display: flex;
-    margin-left: 5px;
+    margin-left: 4px;
 }
 
 .window-button {
-    background-color: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    color: white;
-    padding: 2px 6px;
-    margin-right: 3px;
-    cursor: pointer;
-    border-radius: 3px;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    min-width: 100px;
+    max-width: 150px;
+    color: rgb(255, 255, 255);
+    border-radius: 2px;
+    margin: 0 2px 0 0;
+    padding: 0px 8px;
+    height: 24px;
+    font-size: 11px;
+    top: 2px;
+    background-color: rgb(60, 129, 243);
+    box-shadow: rgba(0, 0, 0, 0.3) -1px 0px inset, rgba(255, 255, 255, 0.2) 1px 1px 1px inset;
+    position: relative;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 150px;
-    font-size: 11px;
+    cursor: pointer;
+}
+
+.window-button:hover {
+    background-color: rgb(105, 160, 248);
 }
 
 
 .window-button.active {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgb(30, 82, 183);
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 1px 1px inset, rgba(83, 83, 83, 0.7) 1px 0px 1px inset;
+}
+
+.window-button.active:hover {
+    background-color: rgb(105, 160, 248);
 }
 
 .clock {
     color: white;
     font-size: 12px;
+    font-family: Tahoma, sans-serif;
 }
 
 .icon {
@@ -199,8 +242,17 @@ html {
     align-items: center;
     width: 70px;
     margin-bottom: 30px;
-    cursor: pointer;
     text-align: center;
+    user-select: none;
+}
+
+.icon.dragging {
+    opacity: 0.5;
+}
+
+.icon img,
+.icon span {
+    pointer-events: none;
 }
 
 .icon img {
@@ -489,7 +541,7 @@ html {
 
 
 .title-button:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    opacity: 0.8
 }
 
 
@@ -519,6 +571,26 @@ html {
     height: 16px;
     margin-right: 5px;
     vertical-align: middle;
+}
+
+.taskbar-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    flex-shrink: 0;
+}
+
+.taskbar-title {
+    font-size: 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+}
+
+.window-button:has(.taskbar-icon) {
+    min-width: 120px;
+    padding-left: 4px;
 }
 
 .about-me-textarea {

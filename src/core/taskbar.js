@@ -23,7 +23,19 @@ function renderTaskbar() {
         if (win === activeWindow) {
             button.classList.add('active');
         }
-        button.textContent = win.title;
+
+        if (win.iconUrl) {
+            const icon = document.createElement('img');
+            icon.src = win.iconUrl;
+            icon.className = 'taskbar-icon';
+            button.appendChild(icon);
+        }
+
+        const titleSpan = document.createElement('span');
+        titleSpan.className = 'taskbar-title';
+        titleSpan.textContent = win.title;
+        button.appendChild(titleSpan);
+
         button.onclick = () => {
             if (win.minimized) {
                 win.minimized = false;

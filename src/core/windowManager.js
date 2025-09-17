@@ -112,6 +112,7 @@ function createWindow(title, contentCallback, iconUrl) {
         el: windowEl,
         contentArea,
         contentCallback,
+        iconUrl,
         minimized: false,
     };
     
@@ -119,6 +120,7 @@ function createWindow(title, contentCallback, iconUrl) {
     
     windows.push(newWindow);
     setActiveWindow(newWindow);
+    renderTaskbar();
 
     if (contentCallback) {
         contentCallback(contentArea, newWindow);
@@ -193,7 +195,7 @@ function setActiveWindow(win) {
         // Bring to front
         windowContainer.appendChild(activeWindow.el);
     }
-    renderWindows();
+    renderTaskbar();
 }
 
 function minimizeWindow(win) {
