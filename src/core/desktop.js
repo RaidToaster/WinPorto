@@ -1,6 +1,6 @@
 import { loadApp } from './appRegistry.js';
 
-const desktop = document.getElementById('desktop');
+const desktopIcons = document.getElementById('desktop-icons');
 const icons = [
     { name: 'About Me', app: 'About Me', img: '../../icons/User Accounts.png' },
     { name: 'Projects', app: 'Projects', img: '../../icons/Briefcase.png' },
@@ -9,13 +9,13 @@ const icons = [
 ];
 
 function renderDesktop() {
-    desktop.innerHTML = ''; // Clear existing icons
+    desktopIcons.innerHTML = ''; // Clear existing icons
 
     icons.forEach(iconData => {
         const iconEl = document.createElement('div');
         iconEl.className = 'icon';
-        iconEl.style.left = '30px'; // Initial position
-        iconEl.style.top = `${30 + icons.indexOf(iconData) * 90}px`; // Staggered position
+        iconEl.style.left = `${30 + (icons.indexOf(iconData) % 5) * 80}px`; // Grid-like positioning
+        iconEl.style.top = `${30 + Math.floor(icons.indexOf(iconData) / 5) * 90}px`; // Staggered rows
 
         const iconImg = document.createElement('img');
         iconImg.src = iconData.img;
@@ -31,7 +31,7 @@ function renderDesktop() {
             loadApp(iconData.app);
         });
 
-        desktop.appendChild(iconEl);
+        desktopIcons.appendChild(iconEl);
     });
 }
 

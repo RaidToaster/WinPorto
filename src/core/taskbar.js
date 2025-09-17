@@ -7,11 +7,13 @@ const taskbar = document.getElementById('taskbar');
 function renderTaskbar() {
     taskbar.innerHTML = ''; // Clear existing content
 
+    const taskbarLeft = document.createElement('div');
+    taskbarLeft.className = 'taskbar-left';
+
     const startButton = document.createElement('div');
     startButton.className = 'start-button';
-    startButton.textContent = 'start';
     startButton.addEventListener('click', toggleStartMenu);
-    taskbar.appendChild(startButton);
+    taskbarLeft.appendChild(startButton);
 
     const windowButtons = document.createElement('div');
     windowButtons.className = 'window-buttons';
@@ -30,7 +32,12 @@ function renderTaskbar() {
         };
         windowButtons.appendChild(button);
     });
-    taskbar.appendChild(windowButtons);
+    taskbarLeft.appendChild(windowButtons);
+
+    taskbar.appendChild(taskbarLeft);
+
+    const taskbarRight = document.createElement('div');
+    taskbarRight.className = 'taskbar-right';
 
     const clock = document.createElement('div');
     clock.className = 'clock';
@@ -40,7 +47,9 @@ function renderTaskbar() {
     };
     updateClock();
     setInterval(updateClock, 1000 * 60);
-    taskbar.appendChild(clock);
+    taskbarRight.appendChild(clock);
+
+    taskbar.appendChild(taskbarRight);
 }
 
 export { renderTaskbar };
