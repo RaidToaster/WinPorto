@@ -1,10 +1,8 @@
 import { createWindow } from '../core/windowManager.js';
 
 function contactApp() {
-    createWindow("Contact", (ctx, win) => {
-        ctx.fillStyle = 'black';
-        ctx.font = '16px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
-        ctx.fillText("Woowee", win.x + 10, win.y + 50);
+    createWindow("Contact", (contentArea) => {
+        contentArea.innerHTML = `<div style="padding: 10px;">Contact content will go here.</div>`;
     }, '../../icons/Email.png');
 }
 
