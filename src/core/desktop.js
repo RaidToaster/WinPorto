@@ -28,10 +28,10 @@ const icons = [
     { name: 'My Portfolio', app: 'My Portfolio', img: new Image(), x: ICON_OFFSET_X, y: ICON_OFFSET_Y + GRID_SIZE_Y * 3, width: 48, height: 48, isHovered: false, isSelected: false },
 ];
 
-icons[0].img.src = './Windows XP Icons/User Accounts.png';
-icons[1].img.src = './Windows XP Icons/Briefcase.png';
-icons[2].img.src = './Windows XP Icons/Email.png';
-icons[3].img.src = './Windows XP Icons/Explorer.png';
+icons[0].img.src = '../../icons/User Accounts.png';
+icons[1].img.src = '../../icons/Briefcase.png';
+icons[2].img.src = '../../icons/Email.png';
+icons[3].img.src = '../../icons/Explorer.png';
 
 function renderDesktop() {
     if (wallpaperLoaded) {

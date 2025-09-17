@@ -15,18 +15,23 @@ const WINDOW_BG_COLOR = '#ECE9D8';
 const CORNER_RADIUS = 8;
 
 const closeIcon = new Image();
-closeIcon.src = 'Windows XP Icons/Exit.png';
+closeIcon.src = '../../icons/Exit.png';
 const minimizeIcon = new Image();
-minimizeIcon.src = 'Windows XP Icons/Minimize.png';
+minimizeIcon.src = '../../icons/Minimize.png';
 const maximizeIcon = new Image();
-maximizeIcon.src = 'Windows XP Icons/Maximize.png';
+maximizeIcon.src = '../../icons/Maximize.png';
 
 const RESIZE_HANDLE_SIZE = 15;
 
 const buttonSize = 20;
 const buttonSpacing = 3;
 
-function createWindow(title, contentCallback) {
+function createWindow(title, contentCallback, iconUrl) {
+    const icon = new Image();
+    if (iconUrl) {
+        icon.src = iconUrl;
+    }
+
     const newWindow = {
         id: nextWindowId++,
         title,
@@ -44,6 +49,7 @@ function createWindow(title, contentCallback) {
         isMinimizeButtonHovered: false,
         isMaximizeButtonHovered: false,
         maximized: false,
+        icon: icon,
     };
     windows.push(newWindow);
     taskbarOrderWindows.push(newWindow);

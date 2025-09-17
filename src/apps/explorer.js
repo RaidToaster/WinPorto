@@ -57,7 +57,7 @@ function explorerApp() {
         ctx.fillStyle = 'black';
         ctx.font = '16px "Segoe UI", Tahoma, Geneva, Verdana, sans-serif';
         ctx.fillText('Select a category to view files', win.x + SIDEBAR_WIDTH + 20, win.y + 30 + TOOLBAR_HEIGHT + 30);
-    });
+    }, '../../icons/Explorer.png');
 }
 
 export { explorerApp };

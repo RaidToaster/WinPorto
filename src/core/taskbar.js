@@ -15,7 +15,7 @@ setInterval(updateTime, 1000 * 60); // Update time every second
 
 // Load the Start button icon
 const startIcon = new Image();
-startIcon.src = './Windows XP Icons/clipart2400718.png';
+startIcon.src = '../../icons/clipart2400718.png';
 
 import { windows, activeWindow, setActiveWindow, taskbarOrderWindows } from './windowManager.js';
 
