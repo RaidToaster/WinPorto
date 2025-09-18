@@ -1,11 +1,13 @@
 import { loadApp } from './appRegistry.js';
+import { setActiveWindow } from './windowManager.js';
+import { isMenuOpen, toggleStartMenu } from './startMenu.js';
 
 const desktopIcons = document.getElementById('desktop-icons');
 const icons = [
     { name: 'About Me', app: 'About Me', img: '../../icons/User Accounts.png', x: 30, y: 30 },
     { name: 'Projects', app: 'Projects', img: '../../icons/Briefcase.png', x: 110, y: 30 },
     { name: 'Contact', app: 'Contact', img: '../../icons/Email.png', x: 190, y: 30 },
-    { name: 'My Portfolio', app: 'My Portfolio', img: '../../icons/Explorer.png', x: 30, y: 120 },
+    { name: 'Explorer', app: 'Explorer', img: '../../icons/Explorer.png', x: 30, y: 120 },
 ];
 
 function renderDesktop() {
@@ -101,6 +103,23 @@ function renderDesktop() {
         desktopIcons.appendChild(iconEl);
     });
 }
+
+desktopIcons.addEventListener('click', (e) => {
+    if (e.target === desktopIcons) {
+        // Deactivate any active window
+        setActiveWindow(null);
+
+        // Deselect any highlighted icon
+        document.querySelectorAll('.icon.highlighted').forEach(icon => {
+            icon.classList.remove('highlighted');
+        });
+
+        // Close start menu if it's open
+        if (isMenuOpen) {
+            toggleStartMenu();
+        }
+    }
+});
 
 // Global cleanup for drag listeners if needed, but since per icon, it's fine
 document.addEventListener('mousemove', (e) => {

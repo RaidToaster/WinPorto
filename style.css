@@ -629,7 +629,7 @@ html {
 }
 
 .tooltip {
-    position: absolute;
+    position: fixed;
     background-color: rgb(237, 237, 229);
     color: black;
     padding: 4px 8px;
@@ -736,7 +736,6 @@ html {
     right: 0;
     width: 15px;
     height: 15px;
-    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><path d="M0 0h8v8H0z" fill="none" stroke="%23000" stroke-width="1"/></svg>') no-repeat center;
     cursor: se-resize;
     z-index: 10;
 }
@@ -783,4 +782,456 @@ html {
     background: transparent;
     cursor: s-resize;
     z-index: 10;
+}
+
+/* Windows XP My Computer Styles */
+.toolbar.xp-style {
+    height: 30px;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    border-bottom: 1px solid #a0a0a0;
+    padding: 2px 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+}
+
+.toolbar-button {
+    padding: 3px 6px;
+    border: 1px solid #a0a0a0;
+    background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+    cursor: pointer;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    min-width: 24px;
+    height: 22px;
+}
+
+.toolbar-button:hover {
+    background: linear-gradient(to bottom, #e8f4ff, #cde6ff);
+    border-color: #316ac5;
+}
+
+.address-bar {
+    flex: 1;
+    height: 20px;
+    border: 1px solid #a0a0a0;
+    padding: 0 5px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    background: white;
+}
+
+.sidebar.xp-style {
+    width: 200px;
+    background: #d6e8ff;
+    border-right: 1px solid #a0a0a0;
+    padding: 5px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+}
+
+.sidebar-section {
+    margin-bottom: 10px;
+    border: 1px solid #a0a0a0;
+    background: white;
+}
+
+.section-header {
+    background: linear-gradient(to bottom, #316ac5, #2957a8);
+    color: white;
+    padding: 4px 8px;
+    font-weight: bold;
+    font-size: 11px;
+    cursor: pointer;
+    margin: 0;
+    border-bottom: 1px solid #a0a0a0;
+}
+
+.section-header:hover {
+    background: linear-gradient(to bottom, #4a7fd4, #3a6bc0);
+}
+
+.section-content {
+    padding: 5px;
+    background: white;
+}
+
+.section-content p {
+    margin: 3px 0;
+    padding: 2px 5px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.section-content p:hover {
+    background: #e8f4ff;
+    color: #316ac5;
+}
+
+.main-content.xp-style {
+    flex: 1;
+    background: #ece9d8;
+    padding: 10px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+}
+
+.content-section {
+    margin-bottom: 20px;
+    border: 1px solid #a0a0a0;
+    background: white;
+    padding: 8px;
+}
+
+.content-section h3 {
+    background: linear-gradient(to bottom, #316ac5, #2957a8);
+    color: white;
+    padding: 4px 8px;
+    margin: -8px -8px 8px -8px;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.content-section p {
+    margin: 3px 0;
+    padding: 2px 5px;
+    cursor: pointer;
+}
+
+.content-section p:hover {
+    background: #e8f4ff;
+    color: #316ac5;
+}
+
+.content-section a {
+    color: #0000ee;
+    text-decoration: none;
+}
+
+.content-section a:hover {
+    text-decoration: underline;
+}
+
+/* Collapsible section functionality */
+.section-content {
+    display: block;
+}
+
+.section-content.collapsed {
+    display: none;
+}
+
+
+/* Windows XP My Computer Styles */
+.toolbar.xp-style {
+    height: 30px;
+    background: linear-gradient(to bottom, #f0f0f0, #e0e0e0);
+    border-bottom: 1px solid #a0a0a0;
+    padding: 2px 5px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+}
+
+.toolbar-button {
+    padding: 3px 6px;
+    border: 1px solid #a0a0a0;
+    background: linear-gradient(to bottom, #ffffff, #e0e0e0);
+    cursor: pointer;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    min-width: 24px;
+    height: 22px;
+}
+
+.toolbar-button:hover {
+    background: linear-gradient(to bottom, #e8f4ff, #cde6ff);
+    border-color: #316ac5;
+}
+
+.address-bar {
+    flex: 1;
+    height: 20px;
+    border: 1px solid #a0a0a0;
+    padding: 0 5px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+    background: white;
+}
+
+.sidebar.xp-style {
+    width: 200px;
+    background: #d6e8ff;
+    border-right: 1px solid #a0a0a0;
+    padding: 5px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+}
+
+.sidebar-section {
+    margin-bottom: 10px;
+    border: 1px solid #a0a0a0;
+    background: white;
+}
+
+.section-header {
+    background: linear-gradient(to bottom, #316ac5, #2957a8);
+    color: white;
+    padding: 4px 8px;
+    font-weight: bold;
+    font-size: 11px;
+    cursor: pointer;
+    margin: 0;
+    border-bottom: 1px solid #a0a0a0;
+}
+
+.section-header:hover {
+    background: linear-gradient(to bottom, #4a7fd4, #3a6bc0);
+}
+
+.section-content {
+    padding: 5px;
+    background: white;
+}
+
+.section-content p {
+    margin: 3px 0;
+    padding: 2px 5px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.section-content p:hover {
+    background: #e8f4ff;
+    color: #316ac5;
+}
+
+.main-content.xp-style {
+    flex: 1;
+    background: #ece9d8;
+    padding: 10px;
+    font-family: Tahoma, sans-serif;
+    font-size: 11px;
+}
+
+.content-section {
+    margin-bottom: 20px;
+    border: 1px solid #a0a0a0;
+    background: white;
+    padding: 8px;
+}
+
+.content-section h3 {
+    background: linear-gradient(to bottom, #316ac5, #2957a8);
+    color: white;
+    padding: 4px 8px;
+    margin: -8px -8px 8px -8px;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.content-section p {
+    margin: 3px 0;
+    padding: 2px 5px;
+    cursor: pointer;
+}
+
+.content-section p:hover {
+    background: #e8f4ff;
+    color: #316ac5;
+}
+
+.content-section a {
+    color: #0000ee;
+    text-decoration: none;
+}
+
+.content-section a:hover {
+    text-decoration: underline;
+}
+
+/* Collapsible section functionality */
+.section-content {
+    display: block;
+}
+
+.section-content.collapsed {
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* === XP EXPLORER STYLES === */
+.explorer-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #ECE9D8;
+    font-family: 'Tahoma', sans-serif;
+    font-size: 11px;
+}
+
+.explorer-toolbar {
+    display: flex;
+    align-items: center;
+    padding: 2px 3px;
+    background: #ECE9D8;
+    border-bottom: 1px solid #D4D0C8;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.toolbar-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.toolbar-button {
+    display: flex;
+    align-items: center;
+    background: transparent;
+    border: 1px solid transparent;
+    padding: 2px 5px;
+    margin-right: 2px;
+}
+
+.toolbar-button:hover {
+    border: 1px solid #BDBDBD;
+    background: #E5F3FF;
+}
+
+.toolbar-button img {
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+}
+
+.toolbar-separator {
+    width: 1px;
+    height: 20px;
+    background: #D4D0C8;
+    margin: 0 4px;
+}
+
+.address-bar-container {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.address-bar-container label {
+    margin-right: 5px;
+    color: #6A6A6A;
+}
+
+.address-bar {
+    flex-grow: 1;
+    height: 21px;
+    border: 1px solid #7F9DB9;
+    padding: 0 5px;
+    font-size: 11px;
+}
+
+.explorer-main-area {
+    display: flex;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.explorer-sidebar {
+    width: 180px;
+    background: #D6E8FF;
+    padding: 10px;
+    border-right: 1px solid #99B4D1;
+}
+
+.sidebar-panel {
+    margin-bottom: 10px;
+}
+
+.sidebar-header {
+    background: linear-gradient(to bottom, #7CA2E0, #4A77D2);
+    color: white;
+    font-weight: bold;
+    padding: 3px 5px;
+    border-top: 1px solid #A8C8F0;
+    border-left: 1px solid #A8C8F0;
+    border-right: 1px solid #A8C8F0;
+}
+
+.sidebar-content {
+    background: #FFFFFF;
+    border: 1px solid #99B4D1;
+    border-top: none;
+    padding: 5px;
+}
+
+.sidebar-content a,
+.sidebar-content p {
+    display: flex;
+    align-items: center;
+    color: #0000EE;
+    text-decoration: none;
+    margin: 5px 0;
+    cursor: pointer;
+}
+
+.sidebar-content a:hover {
+    text-decoration: underline;
+}
+
+.icon-sm {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+}
+
+.explorer-main-content {
+    flex-grow: 1;
+    padding: 10px;
+    background: #ECE9D8;
+}
+
+.content-section {
+    margin-bottom: 15px;
+}
+
+.section-title {
+    font-weight: bold;
+    color: #6A6A6A;
+    border-bottom: 1px solid #D4D0C8;
+    padding-bottom: 2px;
+    margin-bottom: 5px;
+}
+
+.section-body {
+    display: flex;
+    gap: 20px;
+}
+
+.item {
+    width: 72px;
+    height: 72px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    text-align: center;
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.item:hover {
+    color: #0000EE;
+}
+
+.item img {
+    width: 32px;
+    height: 32px;
+
 }

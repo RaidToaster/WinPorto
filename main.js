@@ -16,7 +16,7 @@ function main() {
     registerApp("About Me", null, aboutMeApp);
     registerApp("Projects", null, projectsApp);
     registerApp("Contact", null, contactApp);
-    registerApp('My Portfolio', null, explorerApp);
+    registerApp('Explorer', null, explorerApp);
     registerApp("Pong", null, pongApp);
     registerApp("Snake", null, snakeApp);
 
