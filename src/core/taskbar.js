@@ -1,5 +1,5 @@
 // Core Taskbar: Renders the taskbar, start button, clock, and open window tabs.
-import { windows, activeWindow, setActiveWindow } from './windowManager.js';
+import { windows, activeWindow, setActiveWindow, minimizeWindow } from './windowManager.js';
 import { toggleStartMenu } from './startMenu.js';
 
 const taskbar = document.getElementById('taskbar');
@@ -40,8 +40,13 @@ function renderTaskbar() {
             if (win.minimized) {
                 win.minimized = false;
                 win.el.classList.remove('minimized');
+                setActiveWindow(win);
+            } else if (win === activeWindow) {
+                minimizeWindow(win);
+                setActiveWindow(null);
+            } else {
+                setActiveWindow(win);
             }
-            setActiveWindow(win);
         };
         windowButtons.appendChild(button);
     });
