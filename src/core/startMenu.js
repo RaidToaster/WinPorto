@@ -8,36 +8,44 @@ startMenu.classList.add('hidden');
 document.body.appendChild(startMenu);
 
 const menuItems = [
-    { name: 'About Me', action: 'launch_app_about', icon: '../../Windows XP Icons/User Accounts.png' },
-    { name: 'Projects', action: 'launch_app_projects', icon: '../../Windows XP Icons/Briefcase.png' },
-    { name: 'Contact', action: 'launch_app_contact', icon: '../../Windows XP Icons/Email.png' },
-    { name: 'Games', action: 'show_games_submenu', icon: '../../Windows XP Icons/Game Controller.png' },
-    { name: 'All Programs', action: 'show_all_programs', icon: '../../Windows XP Icons/Programs.png' },
+    { name: 'Internet Explorer', action: 'launch_placeholder', icon: '../../Windows XP Icons/Explorer.png' },
+    { name: 'Outlook Express', action: 'launch_placeholder', icon: '../../Windows XP Icons/Email.png' },
+    { name: 'Minesweeper', action: 'launch_placeholder', icon: '../../Windows XP Icons/Game Controller.png' },
+    { name: 'Notepad', action: 'launch_placeholder', icon: '../../Windows XP Icons/Generic Text Document.png' },
+    { name: 'Winamp', action: 'launch_placeholder', icon: '../../Windows XP Icons/Generic Media.png' },
+    { name: 'Paint', action: 'launch_placeholder', icon: '../../Windows XP Icons/Bitmap.png' },
+    { name: 'Windows Media Player', action: 'launch_placeholder', icon: '../../Windows XP Icons/Generic Video.png' },
+    { name: 'Windows Messenger', action: 'launch_placeholder', icon: '../../Windows XP Icons/User Accounts.png' },
+    { name: 'All Programs', action: 'show_all_programs', icon: '../../Windows XP Icons/Folder Opened.png' },
 ];
 
 function handleLogOff() {
     console.log('Logging off...');
     closeAll();
-    alert('You have been logged off.');
 }
 
 function handleShutdown() {
     console.log('Shutting down...');
     closeAll();
     document.body.innerHTML = '<div class="shutdown-message">Shutting Down...</div>';
-    alert('System is shutting down. Goodbye!');
 }
 
 function renderStartMenu() {
     startMenu.innerHTML = ''; // Clear existing items
 
+    // Full-width header
+    const header = document.createElement('div');
+    header.className = 'menu-header';
+    header.innerHTML = '<img src="../../icons/User Accounts.png" alt="User"><span>Kevin P.M</span>';
+    startMenu.appendChild(header);
+
+    // Panels container for left and right side-by-side
+    const panelsContainer = document.createElement('div');
+    panelsContainer.className = 'panels-container';
+
+    // Left panel (programs, white bg)
     const leftPanel = document.createElement('div');
     leftPanel.className = 'left-panel';
-
-    const header = document.createElement('div');
-    header.className = 'header';
-    header.innerHTML = '<img src="../../icons/User Accounts.png" alt="User"><span>Kevin P.M</span>';
-    leftPanel.appendChild(header);
 
     const menuList = document.createElement('ul');
     menuItems.forEach(item => {
@@ -50,14 +58,7 @@ function renderStartMenu() {
         listItem.innerHTML = `<img src="${item.icon}" alt="${item.name}"><span>${item.name}</span>`;
         listItem.onclick = () => {
             switch (item.action) {
-                case 'launch_app_about':
-                    loadApp('About Me');
-                    break;
-                case 'launch_app_projects':
-                    loadApp('Projects');
-                    break;
-                case 'launch_app_contact':
-                    loadApp('Contact');
+                case 'launch_placeholder':
                     break;
                 case 'show_games_submenu':
                     const gamesSubMenu = document.createElement('ul');
@@ -85,44 +86,23 @@ function renderStartMenu() {
                 case 'show_all_programs':
                     const allProgramsSubMenu = document.createElement('ul');
                     allProgramsSubMenu.className = 'submenu';
-                    const allApps = ['About Me', 'Projects', 'Contact', 'Explorer'];
-                    allApps.forEach(app => {
+                    const allApps = menuItems.filter(item => item.name !== 'All Programs');
+                    allApps.forEach(item => {
                         const appItem = document.createElement('li');
-                        appItem.textContent = app;
+                        appItem.innerHTML = `<img src="${item.icon}" alt="${item.name}"><span>${item.name}</span>`;
                         appItem.onclick = (e) => {
                             e.stopPropagation();
-                            loadApp(app);
+                            switch (item.action) {
+                                case 'launch_placeholder':
+                                    break;
+                                default:
+                                    // Handle other actions if any
+                                    break;
+                            }
                             toggleStartMenu();
                         };
                         allProgramsSubMenu.appendChild(appItem);
                     });
-                    // Add Games sub-sub
-                    const gamesItem = document.createElement('li');
-                    gamesItem.innerHTML = 'Games >';
-                    gamesItem.onclick = (e) => {
-                        e.stopPropagation();
-                        // Toggle games sub-sub if needed, but for simplicity, show games submenu here
-                        const gamesSubSub = document.createElement('ul');
-                        gamesSubSub.className = 'sub-submenu';
-                        const subGames = ['Pong', 'Snake'];
-                        subGames.forEach(game => {
-                            const subGameItem = document.createElement('li');
-                            subGameItem.textContent = game;
-                            subGameItem.onclick = (e2) => {
-                                e2.stopPropagation();
-                                loadApp(game);
-                                toggleStartMenu();
-                            };
-                            gamesSubSub.appendChild(subGameItem);
-                        });
-                        const existingSubSub = gamesItem.querySelector('.sub-submenu');
-                        if (existingSubSub) {
-                            existingSubSub.remove();
-                        } else {
-                            gamesItem.appendChild(gamesSubSub);
-                        }
-                    };
-                    allProgramsSubMenu.appendChild(gamesItem);
 
                     const existingAllSubmenu = listItem.querySelector('.submenu');
                     if (existingAllSubmenu) {
@@ -135,43 +115,32 @@ function renderStartMenu() {
                 case 'close_all_windows':
                     closeAll();
                     break;
+                default:
+                    // No action
+                    break;
             }
             toggleStartMenu();
         };
         menuList.appendChild(listItem);
     });
     leftPanel.appendChild(menuList);
+    panelsContainer.appendChild(leftPanel);
 
-    const footer = document.createElement('div');
-    footer.className = 'footer';
-    const logOffButton = document.createElement('button');
-    logOffButton.innerHTML = `<img src="../../Windows XP Icons/Log Off.png" alt="Log Off"><span>Log off</span>`;
-    logOffButton.onclick = handleLogOff;
-    const shutdownButton = document.createElement('button');
-    shutdownButton.innerHTML = `<img src="../../Windows XP Icons/Turn Off Computer.png" alt="Turn Off"><span>Turn off computer</span>`;
-    shutdownButton.onclick = handleShutdown;
-    footer.appendChild(logOffButton);
-    footer.appendChild(shutdownButton);
-    leftPanel.appendChild(footer);
-
-    startMenu.appendChild(leftPanel);
-
+    // Right panel (system folders, blue bg)
     const rightPanel = document.createElement('div');
     rightPanel.className = 'right-panel';
 
     const rightMenuItems = [
         { name: 'My Documents', icon: '../../Windows XP Icons/My Documents.png' },
-        { name: 'My Recent<br>Documents', icon: '../../Windows XP Icons/Folder Opened.png', small: true },
         { name: 'My Pictures', icon: '../../Windows XP Icons/My Pictures.png' },
         { name: 'My Music', icon: '../../Windows XP Icons/My Music.png' },
         { name: 'My Computer', icon: '../../Windows XP Icons/My Computer.png' },
         { name: 'Control Panel', icon: '../../Windows XP Icons/Control Panel.png' },
-        { name: 'Set program access and defaults', icon: '../../Windows XP Icons/Default Programs.png' },
-        { name: 'Connect to', icon: '../../Windows XP Icons/Entire Network.png' },
+        { name: 'Connect To', icon: '../../Windows XP Icons/Entire Network.png' },
         { name: 'Printers and Faxes', icon: '../../Windows XP Icons/Printers.png' },
         { name: 'Help and Support', icon: '../../Windows XP Icons/Help and Support.png' },
         { name: 'Search', icon: '../../Windows XP Icons/Search.png' },
-        { name: 'Run...', icon: '../../Windows XP Icons/Run.png' }
+        { name: 'Run', icon: '../../Windows XP Icons/Run.png' }
     ];
 
     const rightMenuList = document.createElement('ul');
@@ -185,7 +154,22 @@ function renderStartMenu() {
     });
 
     rightPanel.appendChild(rightMenuList);
-    startMenu.appendChild(rightPanel);
+    panelsContainer.appendChild(rightPanel);
+
+    startMenu.appendChild(panelsContainer);
+
+    // Full-width footer
+    const footer = document.createElement('div');
+    footer.className = 'menu-footer';
+    const logOffButton = document.createElement('button');
+    logOffButton.innerHTML = `<img src=icons/Log Off.png alt="Log Off"><span>Log off</span>`;
+    logOffButton.onclick = handleLogOff;
+    const shutdownButton = document.createElement('button');
+    shutdownButton.innerHTML = `<img src=icons/Turn Off Computer.png alt="Turn Off"><span>Turn off computer</span>`;
+    shutdownButton.onclick = handleShutdown;
+    footer.appendChild(logOffButton);
+    footer.appendChild(shutdownButton);
+    startMenu.appendChild(footer);
 }
 
 function toggleStartMenu() {

@@ -27,8 +27,8 @@ html {
 
 .window {
     position: absolute;
-    width: 800px;
-    height: 600px;
+    width: 600px;
+    height: 400px;
     background-color: #ECE9D8;
     border: 3px solid #0831d9;
     border-radius: 8px 8px 0 0;
@@ -275,13 +275,13 @@ html {
     width: 300px;
     height: auto;
     min-height: 400px;
-    max-height: 600px;
+    max-height: 700px;
     background-color: #f0f0f0;
     border: 1px solid #ABABAB;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     z-index: 1000;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     font-family: Tahoma, sans-serif;
 }
 
@@ -289,10 +289,18 @@ html {
     display: none;
 }
 
+.panels-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-grow: 1;
+    min-height: 200px;
+}
+
 .left-panel {
     width: 150px;
-    background: linear-gradient(to bottom, rgb(24, 104, 206) 0%, rgb(14, 96, 203) 12%, rgb(14, 96, 203) 20%, rgb(17, 100, 207) 32%, rgb(22, 103, 207) 33%, rgb(27, 108, 211) 47%, rgb(30, 112, 217) 54%, rgb(36, 118, 220) 60%, rgb(41, 122, 224) 65%, rgb(52, 130, 227) 77%, rgb(55, 134, 229) 79%, rgb(66, 142, 233) 90%, rgb(71, 145, 235) 100%);
-    color: white;
+    background-color: rgb(237, 237, 229);
+    color: black;
     display: flex;
     flex-direction: column;
     font-family: Tahoma, sans-serif;
@@ -315,6 +323,42 @@ html {
     background: linear-gradient(rgb(24, 104, 206) 0%, rgb(14, 96, 203) 12%, rgb(14, 96, 203) 20%, rgb(17, 100, 207) 32%, rgb(22, 103, 207) 33%, rgb(27, 108, 211) 47%, rgb(30, 112, 217) 54%, rgb(36, 118, 220) 60%, rgb(41, 122, 224) 65%, rgb(52, 130, 227) 77%, rgb(55, 134, 229) 79%, rgb(66, 142, 233) 90%, rgb(71, 145, 235) 100%);
     overflow: hidden;
     border-bottom: 1px solid #ABABAB;
+}
+
+.menu-header {
+    width: 100%;
+    height: 66px;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(rgb(24, 104, 206) 0%, rgb(14, 96, 203) 12%, rgb(14, 96, 203) 20%, rgb(17, 100, 207) 32%, rgb(22, 103, 207) 33%, rgb(27, 108, 211) 47%, rgb(30, 112, 217) 54%, rgb(36, 118, 220) 60%, rgb(41, 122, 224) 65%, rgb(52, 130, 227) 77%, rgb(55, 134, 229) 79%, rgb(66, 142, 233) 90%, rgb(71, 145, 235) 100%);
+    color: white;
+    font-weight: bold;
+    font-size: 11px;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-header::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 1px;
+    left: 0px;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(to right, transparent 0px, rgba(255, 255, 255, 0.3) 1%, rgba(255, 255, 255, 0.5) 2%, rgba(255, 255, 255, 0.5) 95%, rgba(255, 255, 255, 0.3) 98%, rgba(255, 255, 255, 0.2) 99%, transparent 100%);
+    box-shadow: rgb(14, 96, 203) 0px -1px 1px inset;
+}
+
+.menu-header img {
+    width: 32px;
+    height: 32px;
+    margin-right: 10px;
+}
+
+.menu-header span {
+    font-family: Tahoma, sans-serif;
 }
 
 .left-panel .header::before {
@@ -404,23 +448,24 @@ html {
 }
 
 .left-panel li {
-    padding: 4px 10px;
+    padding: 3px 8px;
     display: flex;
     align-items: center;
     cursor: pointer;
     position: relative;
-    font-size: 11px;
+    font-size: 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .left-panel li img {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    margin-right: 8px;
 }
 
 .left-panel li:hover {
-    background-color: #1A4B9B;
+    background-color: rgb(47, 113, 205);
+    color: white;
 }
 
 .left-panel hr {
@@ -432,24 +477,56 @@ html {
 .left-panel .footer {
     display: flex;
     flex-direction: row;
-    padding: 5px;
+    padding: 3px;
     background: linear-gradient(to bottom, #0157D6 0%, #0080FF 100%);
-    gap: 5px;
+    gap: 3px;
     border-top: 1px solid #ABABAB;
     justify-content: space-around;
 }
 
-.left-panel .footer button {
+.menu-footer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    background: linear-gradient(to bottom, #0157D6 0%, #0080FF 100%);
+    border-top: 1px solid #ABABAB;
+    gap: 3px;
+}
+
+.menu-footer button {
     display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
+    gap: 3px;
+    padding: 3px 8px;
     background: #E0E0E0;
     border: 1px solid #ABABAB;
     color: black;
     cursor: pointer;
     border-radius: 2px;
-    font-size: 11px;
+    font-size: 10px;
+    font-family: Tahoma, sans-serif;
+}
+
+.menu-footer button:hover {
+    background: #D0D0D0;
+}
+
+.menu-footer button img {
+    width: 14px;
+    height: 14px;
+}
+
+.left-panel .footer button {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 8px;
+    background: #E0E0E0;
+    border: 1px solid #ABABAB;
+    color: black;
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: 10px;
     justify-content: flex-start;
 }
 
@@ -458,14 +535,15 @@ html {
 }
 
 .left-panel .footer button img {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
 }
 
 .right-panel {
     width: 150px;
-    background-color: rgb(237, 237, 229);
+    background: rgb(203, 227, 255);
     padding: 5px;
+    color: rgb(0, 19, 107);
     border-left: 1px solid #ABABAB;
     font-family: Tahoma, sans-serif;
     font-size: 11px;
@@ -479,37 +557,37 @@ html {
 }
 
 .right-panel li {
-    padding: 6px 5px;
+    padding: 2px 3px;
     cursor: pointer;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    gap: 4px;
     align-items: center;
     text-align: center;
     border: 1px solid transparent;
-    margin: 1px 0;
+    margin: 0;
 }
 
 .right-panel li:hover {
-    background-color: #F0F0F0;
-    border: 1px solid #CCCCCC;
+    background-color: rgb(47, 113, 205);
+    color: white;
 }
 
 .right-panel li img {
-    width: 24px;
-    height: 24px;
-    margin-bottom: 3px;
+    width: 16px;
+    height: 16px;
+    margin-bottom: 1px;
 }
 
 .right-panel li.small-text span {
-    font-size: 10px;
+    font-size: 8px;
     line-height: 1.1;
 }
 
 .right-panel li span {
-    font-size: 11px;
+    font-size: 9px;
     line-height: 1.1;
     word-wrap: break-word;
-    color: black;
 }
 
 #desktop-icons {
@@ -661,5 +739,49 @@ html {
     height: 15px;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15 15"><path d="M0 0h8v8H0z" fill="none" stroke="%23000" stroke-width="1"/></svg>') no-repeat center;
     cursor: se-resize;
+    z-index: 10;
+}
+
+.resize-left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 5px;
+    height: 100%;
+    background: transparent;
+    cursor: w-resize;
+    z-index: 10;
+}
+
+.resize-right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 5px;
+    height: calc(100% - 15px);
+    background: transparent;
+    cursor: e-resize;
+    z-index: 10;
+}
+
+.resize-top {
+    position: absolute;
+    top: 25px;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: transparent;
+    cursor: n-resize;
+    z-index: 10;
+}
+
+.resize-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc(100% - 15px);
+    height: 5px;
+    background: transparent;
+    cursor: s-resize;
     z-index: 10;
 }

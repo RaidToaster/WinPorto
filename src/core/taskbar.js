@@ -39,6 +39,7 @@ function renderTaskbar() {
         button.onclick = () => {
             if (win.minimized) {
                 win.minimized = false;
+                win.el.classList.remove('minimized');
             }
             setActiveWindow(win);
         };

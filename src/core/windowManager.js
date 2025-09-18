@@ -34,26 +34,14 @@ function createWindow(title, contentCallback, iconUrl) {
     const minButton = document.createElement('button');
     minButton.className = 'title-button';
     minButton.innerHTML = '<img src="../../icons/Minimize.png" alt="Minimize">';
-    minButton.onclick = (e) => {
-        e.stopPropagation();
-        minimizeWindow(newWindow);
-    };
 
     const maxButton = document.createElement('button');
     maxButton.className = 'title-button';
     maxButton.innerHTML = '<img src="../../icons/Maximize.png" alt="Maximize">';
-    maxButton.onclick = (e) => {
-        e.stopPropagation();
-        maximizeWindow(newWindow);
-    };
 
     const closeButton = document.createElement('button');
     closeButton.className = 'title-button';
     closeButton.innerHTML = '<img src="../../icons/Exit.png" alt="Close">';
-    closeButton.onclick = (e) => {
-        e.stopPropagation();
-        closeWindow(newWindow);
-    };
 
     titleButtons.appendChild(minButton);
     titleButtons.appendChild(maxButton);
@@ -115,9 +103,9 @@ function createWindow(title, contentCallback, iconUrl) {
         iconUrl,
         minimized: false,
     };
-    
+
     contentArea.addEventListener('mousedown', () => setActiveWindow(newWindow));
-    
+
     windows.push(newWindow);
     setActiveWindow(newWindow);
     renderTaskbar();
@@ -125,7 +113,23 @@ function createWindow(title, contentCallback, iconUrl) {
     if (contentCallback) {
         contentCallback(contentArea, newWindow);
     }
-    
+
+    minButton.onclick = (e) => {
+        e.stopPropagation();
+        minimizeWindow(newWindow);
+    };
+
+    maxButton.onclick = (e) => {
+        e.stopPropagation();
+        maximizeWindow(newWindow);
+    };
+
+    closeButton.onclick = (e) => {
+        e.stopPropagation();
+        closeWindow(newWindow);
+    };
+
+    // Bottom-right corner resize (diagonal)
     const resizeHandle = document.createElement('div');
     resizeHandle.className = 'resize-handle';
     resizeHandle.addEventListener('mousedown', (e) => {
@@ -162,7 +166,129 @@ function createWindow(title, contentCallback, iconUrl) {
         document.addEventListener('mouseup', onMouseUp);
     });
     windowEl.appendChild(resizeHandle);
-    
+
+    // Left side resize (horizontal)
+    const resizeLeft = document.createElement('div');
+    resizeLeft.className = 'resize-left';
+    resizeLeft.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        let isResizing = true;
+        const startX = e.clientX;
+        const currentLeft = parseFloat(windowEl.style.left) || 0;
+        const startWidth = windowEl.offsetWidth;
+        setActiveWindow(newWindow);
+        const onMouseMove = (e) => {
+            if (isResizing) {
+                const deltaX = startX - e.clientX; // Reverse for left side
+                let newWidth = Math.max(200, startWidth + deltaX);
+                let newLeft = currentLeft + (startWidth - newWidth);
+                const containerRect = windowContainer.getBoundingClientRect();
+                newLeft = Math.max(0, Math.min(newLeft, containerRect.width - newWidth));
+                newWidth = Math.min(newWidth, containerRect.width - newLeft);
+                windowEl.style.width = `${newWidth}px`;
+                windowEl.style.left = `${newLeft}px`;
+            }
+        };
+        const onMouseUp = () => {
+            isResizing = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
+    windowEl.appendChild(resizeLeft);
+
+    // Right side resize (horizontal)
+    const resizeRight = document.createElement('div');
+    resizeRight.className = 'resize-right';
+    resizeRight.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        let isResizing = true;
+        const startX = e.clientX;
+        const currentLeft = parseFloat(windowEl.style.left) || 0;
+        const startWidth = windowEl.offsetWidth;
+        setActiveWindow(newWindow);
+        const onMouseMove = (e) => {
+            if (isResizing) {
+                const deltaX = e.clientX - startX;
+                let newWidth = Math.max(200, startWidth + deltaX);
+                const containerRect = windowContainer.getBoundingClientRect();
+                newWidth = Math.min(newWidth, containerRect.width - currentLeft);
+                windowEl.style.width = `${newWidth}px`;
+            }
+        };
+        const onMouseUp = () => {
+            isResizing = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
+    windowEl.appendChild(resizeRight);
+
+    // Top side resize (vertical, below titlebar)
+    const resizeTop = document.createElement('div');
+    resizeTop.className = 'resize-top';
+    resizeTop.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        let isResizing = true;
+        const startY = e.clientY;
+        const currentTop = parseFloat(windowEl.style.top) || 0;
+        const startHeight = windowEl.offsetHeight;
+        setActiveWindow(newWindow);
+        const onMouseMove = (e) => {
+            if (isResizing) {
+                const deltaY = startY - e.clientY; // Reverse for top side
+                let newHeight = Math.max(150, startHeight + deltaY);
+                let newTop = currentTop + (startHeight - newHeight);
+                const containerRect = windowContainer.getBoundingClientRect();
+                newTop = Math.max(0, Math.min(newTop, containerRect.height - newHeight));
+                newHeight = Math.min(newHeight, containerRect.height - newTop);
+                windowEl.style.height = `${newHeight}px`;
+                windowEl.style.top = `${newTop}px`;
+            }
+        };
+        const onMouseUp = () => {
+            isResizing = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
+    windowEl.appendChild(resizeTop);
+
+    // Bottom side resize (vertical)
+    const resizeBottom = document.createElement('div');
+    resizeBottom.className = 'resize-bottom';
+    resizeBottom.addEventListener('mousedown', (e) => {
+        e.stopPropagation();
+        let isResizing = true;
+        const startY = e.clientY;
+        const currentTop = parseFloat(windowEl.style.top) || 0;
+        const startHeight = windowEl.offsetHeight;
+        setActiveWindow(newWindow);
+        const onMouseMove = (e) => {
+            if (isResizing) {
+                const deltaY = e.clientY - startY;
+                let newHeight = Math.max(150, startHeight + deltaY);
+                const containerRect = windowContainer.getBoundingClientRect();
+                newHeight = Math.min(newHeight, containerRect.height - currentTop);
+                windowEl.style.height = `${newHeight}px`;
+            }
+        };
+        const onMouseUp = () => {
+            isResizing = false;
+            document.removeEventListener('mousemove', onMouseMove);
+            document.removeEventListener('mouseup', onMouseUp);
+        };
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+    });
+    windowEl.appendChild(resizeBottom);
+
     return newWindow;
 }
 
@@ -210,11 +336,13 @@ function maximizeWindow(win) {
         win.originalTop = getComputedStyle(win.el).top;
         win.originalWidth = getComputedStyle(win.el).width;
         win.originalHeight = getComputedStyle(win.el).height;
-        win.el.classList.add('maximized');
+        win.el.style.left = '0px';
+        win.el.style.top = '0px';
+        win.el.style.width = '100%';
+        win.el.style.height = '100%';
         win.maximized = true;
         // Update max button to restore icon if needed, but skipping for simplicity
     } else {
-        win.el.classList.remove('maximized');
         win.el.style.left = win.originalLeft;
         win.el.style.top = win.originalTop;
         win.el.style.width = win.originalWidth;
