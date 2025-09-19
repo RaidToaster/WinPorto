@@ -10,15 +10,53 @@ const icons = [
     { name: 'Explorer', app: 'Explorer', img: '../../icons/Explorer.png', x: 30, y: 120 },
 ];
 
+function isPositionOccupied(x, y, currentIconIndex) {
+    return icons.some((icon, index) => {
+        if (index === currentIconIndex) {
+            return false;
+        }
+        return icon.x === x && icon.y === y;
+    });
+}
+
+function findNextAvailablePosition(x, y) {
+    let newX = x;
+    let newY = y;
+    const gridStepX = 80;
+    const gridStepY = 90;
+    const desktopRect = desktopIcons.getBoundingClientRect();
+
+    while (isPositionOccupied(newX, newY, -1)) {
+        newX += gridStepX;
+        if (newX + 70 > desktopRect.width) {
+            newX = 30;
+            newY += gridStepY;
+        }
+        if (newY + 90 > desktopRect.height) {
+            // If we run out of space, we'll just place it at the original spot for now.
+            // A better solution might involve finding the first available spot from the top.
+            return { x, y };
+        }
+    }
+    return { x: newX, y: newY };
+}
+
 function renderDesktop() {
     desktopIcons.innerHTML = '';
 
     icons.forEach(iconData => {
         const iconEl = document.createElement('div');
-        iconEl.className = 'icon';
+        iconEl.className = 'desktop-icon';
+        
+        // Ensure initial positions are not overlapping
+        const availablePosition = findNextAvailablePosition(iconData.x, iconData.y);
+        iconData.x = availablePosition.x;
+        iconData.y = availablePosition.y;
+
         iconEl.style.left = `${iconData.x}px`;
         iconEl.style.top = `${iconData.y}px`;
-        iconEl.dataset.index = icons.indexOf(iconData);
+        const iconIndex = icons.indexOf(iconData);
+        iconEl.dataset.index = iconIndex;
 
         const iconImg = document.createElement('img');
         iconImg.src = iconData.img;
@@ -41,16 +79,14 @@ function renderDesktop() {
 
         iconEl.addEventListener('click', (e) => {
             if (e.detail === 2) return; // Ignore if it's a double-click
-            document.querySelectorAll('.icon').forEach(icon => icon.classList.remove('highlighted'));
-            iconEl.classList.add('highlighted');
+            document.querySelectorAll('.desktop-icon').forEach(icon => icon.classList.remove('selected'));
+            iconEl.classList.add('selected');
         });
 
         // Drag functionality
         let isDragging = false;
         let dragOffsetX = 0;
         let dragOffsetY = 0;
-        let startX = 0;
-        let startY = 0;
 
         const startDrag = (e) => {
             if (e.target.tagName === 'IMG' || e.target.tagName === 'SPAN') return; // Don't drag if clicking on img or label
@@ -58,8 +94,6 @@ function renderDesktop() {
             const rect = iconEl.getBoundingClientRect();
             dragOffsetX = e.clientX - rect.left;
             dragOffsetY = e.clientY - rect.top;
-            startX = iconData.x;
-            startY = iconData.y;
             iconEl.style.zIndex = '1000';
             iconEl.classList.add('dragging');
             e.preventDefault();
@@ -82,16 +116,27 @@ function renderDesktop() {
             isDragging = false;
             iconEl.style.zIndex = '';
             iconEl.classList.remove('dragging');
-            // Snap to grid
+            
             const newX = parseFloat(iconEl.style.left);
             const newY = parseFloat(iconEl.style.top);
-            const gridX = Math.round((newX - 30) / 80) * 80 + 30;
-            const gridY = Math.round((newY - 30) / 90) * 90 + 30;
-            // Clamp snapped position
+            
+            let gridX = Math.round((newX - 30) / 80) * 80 + 30;
+            let gridY = Math.round((newY - 30) / 90) * 90 + 30;
+
             const maxX = window.innerWidth - 110; // Approximate
             const maxY = window.innerHeight - 150;
-            iconData.x = Math.max(30, Math.min(gridX, maxX));
-            iconData.y = Math.max(30, Math.min(gridY, maxY));
+            gridX = Math.max(30, Math.min(gridX, maxX));
+            gridY = Math.max(30, Math.min(gridY, maxY));
+
+            if (isPositionOccupied(gridX, gridY, iconIndex)) {
+                const nextPos = findNextAvailablePosition(gridX, gridY);
+                gridX = nextPos.x;
+                gridY = nextPos.y;
+            }
+
+            iconData.x = gridX;
+            iconData.y = gridY;
+            
             iconEl.style.left = `${iconData.x}px`;
             iconEl.style.top = `${iconData.y}px`;
         };
@@ -110,8 +155,8 @@ desktopIcons.addEventListener('click', (e) => {
         setActiveWindow(null);
 
         // Deselect any highlighted icon
-        document.querySelectorAll('.icon.highlighted').forEach(icon => {
-            icon.classList.remove('highlighted');
+        document.querySelectorAll('.desktop-icon.selected').forEach(icon => {
+            icon.classList.remove('selected');
         });
 
         // Close start menu if it's open
