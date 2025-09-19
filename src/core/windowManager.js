@@ -1,5 +1,6 @@
 // Core Window Manager: Manages all application windows, including their state, position, and rendering order.
 import { renderTaskbar } from './taskbar.js';
+import { throttle } from './utils.js';
 
 const windows = [];
 let activeWindow = null;
@@ -7,7 +8,7 @@ let nextWindowId = 1;
 let zIndexCounter = 0;
 const windowContainer = document.getElementById('window-container');
 
-function createWindow(title, contentCallback, iconUrl) {
+function createWindow(title, content, iconUrl) {
     const windowEl = document.createElement('div');
     windowEl.className = 'window';
     windowEl.style.left = `${50 + (windows.length % 10) * 30}px`;
@@ -60,9 +61,13 @@ function createWindow(title, contentCallback, iconUrl) {
         const offsetX = e.clientX - windowEl.offsetLeft;
         const offsetY = e.clientY - windowEl.offsetTop;
 
+        const shield = document.createElement('div');
+        shield.className = 'shield';
+        windowEl.appendChild(shield);
+
         setActiveWindow(newWindow);
 
-        function onMouseMove(e) {
+        const onMouseMove = throttle(function(e) {
             if (isDragging) {
                 let newLeft = e.clientX - offsetX;
                 let newTop = e.clientY - offsetY;
@@ -75,10 +80,11 @@ function createWindow(title, contentCallback, iconUrl) {
                 windowEl.style.left = `${newLeft}px`;
                 windowEl.style.top = `${newTop}px`;
             }
-        }
+        }, 16);
 
         function onMouseUp() {
             isDragging = false;
+            windowEl.removeChild(shield);
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         }
@@ -90,6 +96,17 @@ function createWindow(title, contentCallback, iconUrl) {
     const contentArea = document.createElement('div');
     contentArea.className = 'content-area';
 
+    if (typeof content === 'string') {
+        const iframe = document.createElement('iframe');
+        iframe.src = content;
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        contentArea.appendChild(iframe);
+    } else if (typeof content === 'function') {
+        content(contentArea);
+    }
+
     windowEl.appendChild(titleBar);
     windowEl.appendChild(contentArea);
     windowContainer.appendChild(windowEl);
@@ -99,7 +116,7 @@ function createWindow(title, contentCallback, iconUrl) {
         title,
         el: windowEl,
         contentArea,
-        contentCallback,
+        content,
         iconUrl,
         minimized: false,
     };
@@ -109,10 +126,6 @@ function createWindow(title, contentCallback, iconUrl) {
     windows.push(newWindow);
     setActiveWindow(newWindow);
     renderTaskbar();
-
-    if (contentCallback) {
-        contentCallback(contentArea, newWindow);
-    }
 
     minButton.onclick = (e) => {
         e.stopPropagation();
@@ -141,8 +154,13 @@ function createWindow(title, contentCallback, iconUrl) {
         const currentTop = parseFloat(windowEl.style.top) || 0;
         const startWidth = windowEl.offsetWidth;
         const startHeight = windowEl.offsetHeight;
+
+        const shield = document.createElement('div');
+        shield.className = 'shield';
+        windowEl.appendChild(shield);
+
         setActiveWindow(newWindow);
-        const onMouseMove = (e) => {
+        const onMouseMove = throttle((e) => {
             if (isResizing) {
                 const deltaX = e.clientX - startX;
                 const deltaY = e.clientY - startY;
@@ -156,9 +174,10 @@ function createWindow(title, contentCallback, iconUrl) {
                 windowEl.style.width = `${newWidth}px`;
                 windowEl.style.height = `${newHeight}px`;
             }
-        };
+        }, 16);
         const onMouseUp = () => {
             isResizing = false;
+            windowEl.removeChild(shield);
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         };
@@ -176,8 +195,13 @@ function createWindow(title, contentCallback, iconUrl) {
         const startX = e.clientX;
         const currentLeft = parseFloat(windowEl.style.left) || 0;
         const startWidth = windowEl.offsetWidth;
+
+        const shield = document.createElement('div');
+        shield.className = 'shield';
+        windowEl.appendChild(shield);
+
         setActiveWindow(newWindow);
-        const onMouseMove = (e) => {
+        const onMouseMove = throttle((e) => {
             if (isResizing) {
                 const deltaX = startX - e.clientX; // Reverse for left side
                 let newWidth = Math.max(200, startWidth + deltaX);
@@ -188,9 +212,10 @@ function createWindow(title, contentCallback, iconUrl) {
                 windowEl.style.width = `${newWidth}px`;
                 windowEl.style.left = `${newLeft}px`;
             }
-        };
+        }, 16);
         const onMouseUp = () => {
             isResizing = false;
+            windowEl.removeChild(shield);
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         };
@@ -208,8 +233,13 @@ function createWindow(title, contentCallback, iconUrl) {
         const startX = e.clientX;
         const currentLeft = parseFloat(windowEl.style.left) || 0;
         const startWidth = windowEl.offsetWidth;
+
+        const shield = document.createElement('div');
+        shield.className = 'shield';
+        windowEl.appendChild(shield);
+
         setActiveWindow(newWindow);
-        const onMouseMove = (e) => {
+        const onMouseMove = throttle((e) => {
             if (isResizing) {
                 const deltaX = e.clientX - startX;
                 let newWidth = Math.max(200, startWidth + deltaX);
@@ -217,9 +247,10 @@ function createWindow(title, contentCallback, iconUrl) {
                 newWidth = Math.min(newWidth, containerRect.width - currentLeft);
                 windowEl.style.width = `${newWidth}px`;
             }
-        };
+        }, 16);
         const onMouseUp = () => {
             isResizing = false;
+            windowEl.removeChild(shield);
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         };
@@ -237,8 +268,13 @@ function createWindow(title, contentCallback, iconUrl) {
         const startY = e.clientY;
         const currentTop = parseFloat(windowEl.style.top) || 0;
         const startHeight = windowEl.offsetHeight;
+
+        const shield = document.createElement('div');
+        shield.className = 'shield';
+        windowEl.appendChild(shield);
+
         setActiveWindow(newWindow);
-        const onMouseMove = (e) => {
+        const onMouseMove = throttle((e) => {
             if (isResizing) {
                 const deltaY = startY - e.clientY; // Reverse for top side
                 let newHeight = Math.max(150, startHeight + deltaY);
@@ -249,9 +285,10 @@ function createWindow(title, contentCallback, iconUrl) {
                 windowEl.style.height = `${newHeight}px`;
                 windowEl.style.top = `${newTop}px`;
             }
-        };
+        }, 16);
         const onMouseUp = () => {
             isResizing = false;
+            windowEl.removeChild(shield);
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         };
@@ -269,8 +306,13 @@ function createWindow(title, contentCallback, iconUrl) {
         const startY = e.clientY;
         const currentTop = parseFloat(windowEl.style.top) || 0;
         const startHeight = windowEl.offsetHeight;
+
+        const shield = document.createElement('div');
+        shield.className = 'shield';
+        windowEl.appendChild(shield);
+
         setActiveWindow(newWindow);
-        const onMouseMove = (e) => {
+        const onMouseMove = throttle((e) => {
             if (isResizing) {
                 const deltaY = e.clientY - startY;
                 let newHeight = Math.max(150, startHeight + deltaY);
@@ -278,9 +320,10 @@ function createWindow(title, contentCallback, iconUrl) {
                 newHeight = Math.min(newHeight, containerRect.height - currentTop);
                 windowEl.style.height = `${newHeight}px`;
             }
-        };
+        }, 16);
         const onMouseUp = () => {
             isResizing = false;
+            windowEl.removeChild(shield);
             document.removeEventListener('mousemove', onMouseMove);
             document.removeEventListener('mouseup', onMouseUp);
         };

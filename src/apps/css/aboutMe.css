@@ -1,0 +1,25 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    background-color: #ECE9D8;
+    font-family: "Noto Sans TC", sans-serif;
+}
+
+.about-me-textarea {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    border: none;
+    padding: 10px;
+    font-family: 'Noto Sans', sans-serif;
+    resize: none;
+    box-sizing: border-box;
+}
+
+.about-me-textarea::selection {
+    background-color: transparent;
+    color: inherit;
+}

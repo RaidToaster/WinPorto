@@ -4,10 +4,10 @@ import { isMenuOpen, toggleStartMenu } from './startMenu.js';
 
 const desktopIcons = document.getElementById('desktop-icons');
 const icons = [
-    { name: 'About Me', app: 'About Me', img: '../../icons/User Accounts.png', x: 30, y: 30 },
-    { name: 'Projects', app: 'Projects', img: '../../icons/Briefcase.png', x: 110, y: 30 },
-    { name: 'Contact', app: 'Contact', img: '../../icons/Email.png', x: 190, y: 30 },
-    { name: 'Explorer', app: 'Explorer', img: '../../icons/Explorer.png', x: 30, y: 120 },
+    { name: 'About Me', app: 'About Me', img: '../../icons/User Accounts.png', x: -50, y: 30 },
+    { name: 'Projects', app: 'Projects', img: '../../icons/Briefcase.png', x: -50, y: 120 },
+    { name: 'Contact', app: 'Contact', img: '../../icons/Email.png', x: -50, y: 210 },
+    { name: 'Explorer', app: 'Explorer', img: '../../icons/Explorer.png', x: -50, y: 300 },
 ];
 
 function isPositionOccupied(x, y, currentIconIndex) {
@@ -33,8 +33,6 @@ function findNextAvailablePosition(x, y) {
             newY += gridStepY;
         }
         if (newY + 90 > desktopRect.height) {
-            // If we run out of space, we'll just place it at the original spot for now.
-            // A better solution might involve finding the first available spot from the top.
             return { x, y };
         }
     }
@@ -47,7 +45,7 @@ function renderDesktop() {
     icons.forEach(iconData => {
         const iconEl = document.createElement('div');
         iconEl.className = 'desktop-icon';
-        
+
         // Ensure initial positions are not overlapping
         const availablePosition = findNextAvailablePosition(iconData.x, iconData.y);
         iconData.x = availablePosition.x;
@@ -116,10 +114,10 @@ function renderDesktop() {
             isDragging = false;
             iconEl.style.zIndex = '';
             iconEl.classList.remove('dragging');
-            
+
             const newX = parseFloat(iconEl.style.left);
             const newY = parseFloat(iconEl.style.top);
-            
+
             let gridX = Math.round((newX - 30) / 80) * 80 + 30;
             let gridY = Math.round((newY - 30) / 90) * 90 + 30;
 
@@ -136,7 +134,7 @@ function renderDesktop() {
 
             iconData.x = gridX;
             iconData.y = gridY;
-            
+
             iconEl.style.left = `${iconData.x}px`;
             iconEl.style.top = `${iconData.y}px`;
         };

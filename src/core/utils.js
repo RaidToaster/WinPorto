@@ -1,2 +1,16 @@
-// This file is intentionally left blank as all utility functions were related to the old canvas implementation.
-export {};
+// Utility functions
+
+function throttle(func, limit) {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+}
+
+export { throttle };
