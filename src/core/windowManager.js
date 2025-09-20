@@ -11,8 +11,14 @@ const windowContainer = document.getElementById('window-container');
 function createWindow(title, content, iconUrl, windowClass = '') {
     const windowEl = document.createElement('div');
     windowEl.className = `window ${windowClass}`.trim();
-    windowEl.style.left = `${50 + (windows.length % 10) * 30}px`;
-    windowEl.style.top = `${50 + (windows.length % 10) * 30}px`;
+
+    // Mobile-responsive positioning
+    const isMobile = window.innerWidth <= 768;
+    const baseOffset = isMobile ? 10 : 50;
+    const spacing = isMobile ? 15 : 30;
+
+    windowEl.style.left = `${baseOffset + (windows.length % 10) * spacing}px`;
+    windowEl.style.top = `${baseOffset + (windows.length % 10) * spacing}px`;
 
     const titleBar = document.createElement('div');
     titleBar.className = 'title-bar';
@@ -164,8 +170,11 @@ function createWindow(title, content, iconUrl, windowClass = '') {
             if (isResizing) {
                 const deltaX = e.clientX - startX;
                 const deltaY = e.clientY - startY;
-                let newWidth = Math.max(200, startWidth + deltaX);
-                let newHeight = Math.max(150, startHeight + deltaY);
+                const isMobile = window.innerWidth <= 768;
+                const minWidth = isMobile ? 250 : 200;
+                const minHeight = isMobile ? 180 : 150;
+                let newWidth = Math.max(minWidth, startWidth + deltaX);
+                let newHeight = Math.max(minHeight, startHeight + deltaY);
                 const containerRect = windowContainer.getBoundingClientRect();
                 const maxWidth = containerRect.width - currentLeft;
                 const maxHeight = containerRect.height - currentTop;
@@ -204,7 +213,9 @@ function createWindow(title, content, iconUrl, windowClass = '') {
         const onMouseMove = throttle((e) => {
             if (isResizing) {
                 const deltaX = startX - e.clientX; // Reverse for left side
-                let newWidth = Math.max(200, startWidth + deltaX);
+                const isMobile = window.innerWidth <= 768;
+                const minWidth = isMobile ? 250 : 200;
+                let newWidth = Math.max(minWidth, startWidth + deltaX);
                 let newLeft = currentLeft + (startWidth - newWidth);
                 const containerRect = windowContainer.getBoundingClientRect();
                 newLeft = Math.max(0, Math.min(newLeft, containerRect.width - newWidth));
@@ -242,7 +253,9 @@ function createWindow(title, content, iconUrl, windowClass = '') {
         const onMouseMove = throttle((e) => {
             if (isResizing) {
                 const deltaX = e.clientX - startX;
-                let newWidth = Math.max(200, startWidth + deltaX);
+                const isMobile = window.innerWidth <= 768;
+                const minWidth = isMobile ? 250 : 200;
+                let newWidth = Math.max(minWidth, startWidth + deltaX);
                 const containerRect = windowContainer.getBoundingClientRect();
                 newWidth = Math.min(newWidth, containerRect.width - currentLeft);
                 windowEl.style.width = `${newWidth}px`;
@@ -277,7 +290,9 @@ function createWindow(title, content, iconUrl, windowClass = '') {
         const onMouseMove = throttle((e) => {
             if (isResizing) {
                 const deltaY = startY - e.clientY; // Reverse for top side
-                let newHeight = Math.max(150, startHeight + deltaY);
+                const isMobile = window.innerWidth <= 768;
+                const minHeight = isMobile ? 180 : 150;
+                let newHeight = Math.max(minHeight, startHeight + deltaY);
                 let newTop = currentTop + (startHeight - newHeight);
                 const containerRect = windowContainer.getBoundingClientRect();
                 newTop = Math.max(0, Math.min(newTop, containerRect.height - newHeight));
@@ -315,7 +330,9 @@ function createWindow(title, content, iconUrl, windowClass = '') {
         const onMouseMove = throttle((e) => {
             if (isResizing) {
                 const deltaY = e.clientY - startY;
-                let newHeight = Math.max(150, startHeight + deltaY);
+                const isMobile = window.innerWidth <= 768;
+                const minHeight = isMobile ? 180 : 150;
+                let newHeight = Math.max(minHeight, startHeight + deltaY);
                 const containerRect = windowContainer.getBoundingClientRect();
                 newHeight = Math.min(newHeight, containerRect.height - currentTop);
                 windowEl.style.height = `${newHeight}px`;
