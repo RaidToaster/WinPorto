@@ -211,6 +211,52 @@ body {
     transform: scale(1.05);
 }
 
+/* Certifications Section */
+.certifications-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.certification-item {
+    background: #fdfdfd;
+    padding: 25px;
+    border-radius: 10px;
+    border-left: 6px solid var(--secondary-color);
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.certification-item:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow);
+}
+
+.cert-text h3 {
+    margin: 0;
+    color: var(--primary-color);
+    font-size: 1.3em;
+}
+
+.cert-image {
+    flex-shrink: 0;
+}
+
+.cert-image img {
+    max-width: 200px;
+    max-height: 150px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.cert-image img:hover {
+    transform: scale(1.02);
+}
+
 /* Contact Section */
 .contact-container {
     display: flex;

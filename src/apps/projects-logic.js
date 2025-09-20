@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             : '';
 
         card.innerHTML = `
-            <img src="${project.images[0]}" alt="${project.title}">
+            <img src="${project.images[0]}" alt="${project.title} - Project by Kevin Pramudya Mahardika">
             <div class="project-card-content">
                 <h3>${project.title}</h3>
                 <p>${project.description}</p>
@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         project.images.forEach((imgSrc, index) => {
             const thumb = document.createElement('img');
             thumb.src = imgSrc;
-            thumb.alt = `${project.title} thumbnail ${index + 1}`;
+            thumb.alt = `${project.title} - Project by Kevin Pramudya Mahardika - Screenshot ${index + 1}`;
             if (index === 0) {
                 thumb.classList.add('active');
             }
