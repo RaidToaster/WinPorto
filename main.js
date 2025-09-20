@@ -7,6 +7,7 @@ import { aboutMeApp } from './src/apps/aboutMe.js';
 import { startupApp } from './src/apps/startup.js';
 import { pongApp } from './src/apps/games/pong.js';
 import { snakeApp } from './src/apps/games/snake.js';
+import { paintApp } from './src/apps/paint.js';
 import { renderTaskbar } from './src/core/taskbar.js';
 import { renderDesktop } from './src/core/desktop.js';
 import { toggleStartMenu } from './src/core/startMenu.js';
@@ -20,6 +21,7 @@ function main() {
     registerApp('About Me', null, aboutMeApp);
     registerApp("Pong", null, pongApp);
     registerApp("Snake", null, snakeApp);
+    registerApp("Paint", null, paintApp);
 
     renderDesktop();
     renderTaskbar();

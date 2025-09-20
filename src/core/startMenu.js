@@ -8,15 +8,15 @@ startMenu.classList.add('hidden');
 document.body.appendChild(startMenu);
 
 const menuItems = [
-    { name: 'Internet Explorer', action: 'launch_placeholder', icon: '../../Windows XP Icons/Explorer.png' },
-    { name: 'Outlook Express', action: 'launch_placeholder', icon: '../../Windows XP Icons/Email.png' },
-    { name: 'Minesweeper', action: 'launch_placeholder', icon: '../../Windows XP Icons/Game Controller.png' },
-    { name: 'Notepad', action: 'launch_placeholder', icon: '../../Windows XP Icons/Generic Text Document.png' },
-    { name: 'Winamp', action: 'launch_placeholder', icon: '../../Windows XP Icons/Generic Media.png' },
-    { name: 'Paint', action: 'launch_placeholder', icon: '../../Windows XP Icons/Bitmap.png' },
-    { name: 'Windows Media Player', action: 'launch_placeholder', icon: '../../Windows XP Icons/Generic Video.png' },
-    { name: 'Windows Messenger', action: 'launch_placeholder', icon: '../../Windows XP Icons/User Accounts.png' },
-    { name: 'All Programs', action: 'show_all_programs', icon: '../../Windows XP Icons/Folder Opened.png' },
+{ name: 'Internet Explorer', action: 'launch_placeholder', icon: '../../Windows XP Icons/Explorer.png' },
+{ name: 'Outlook Express', action: 'launch_placeholder', icon: '../../Windows XP Icons/Email.png' },
+{ name: 'Minesweeper', action: 'launch_placeholder', icon: '../../Windows XP Icons/Game Controller.png' },
+{ name: 'Notepad', action: 'launch_placeholder', icon: '../../Windows XP Icons/Generic Text Document.png' },
+{ name: 'Winamp', action: 'launch_placeholder', icon: '../../Windows XP Icons/Generic Media.png' },
+{ name: 'Paint', action: 'launch_app', icon: '../../Windows XP Icons/Bitmap.png' },
+{ name: 'Windows Media Player', action: 'launch_placeholder', icon: '../../Windows XP Icons/Generic Video.png' },
+{ name: 'Windows Messenger', action: 'launch_placeholder', icon: '../../Windows XP Icons/User Accounts.png' },
+{ name: 'All Programs', action: 'show_all_programs', icon: '../../Windows XP Icons/Folder Opened.png' },
 ];
 
 function handleLogOff() {
@@ -59,6 +59,9 @@ function renderStartMenu() {
         listItem.onclick = () => {
             switch (item.action) {
                 case 'launch_placeholder':
+                    break;
+                case 'launch_app':
+                    loadApp(item.name);
                     break;
                 case 'show_games_submenu':
                     const gamesSubMenu = document.createElement('ul');

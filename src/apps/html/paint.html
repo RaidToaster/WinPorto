@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint</title>
+    <link rel="stylesheet" href="../css/paint.css">
+</head>
+
+<body>
+    <div class="paint-container">
+        <!-- Menu Bar -->
+        <div class="menu-bar">
+            <div class="menu-item">File</div>
+            <div class="menu-item">Edit</div>
+            <div class="menu-item">View</div>
+            <div class="menu-item">Image</div>
+            <div class="menu-item">Colors</div>
+            <div class="menu-item">Help</div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+            <div class="tool-group">
+                <button class="tool-btn active" data-tool="brush" title="Brush">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </button>
+                <button class="tool-btn" data-tool="eraser" title="Eraser">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 20H8l-6-6 6-6h12l6 6-6 6z"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="tool-group">
+                <label>Size:</label>
+                <input type="range" id="brush-size" min="1" max="50" value="5">
+                <span id="size-value">5</span>
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-area">
+            <!-- Canvas -->
+            <div class="canvas-container">
+                <canvas id="paint-canvas"></canvas>
+            </div>
+        </div>
+
+        <!-- Color Palette at Bottom -->
+        <div class="color-palette">
+            <div class="color-row">
+                <button class="color-btn" data-color="#000000" style="background-color: #000000;"></button>
+                <button class="color-btn" data-color="#FFFFFF" style="background-color: #FFFFFF; border: 1px solid #ccc;"></button>
+                <button class="color-btn" data-color="#FF0000" style="background-color: #FF0000;"></button>
+                <button class="color-btn" data-color="#00FF00" style="background-color: #00FF00;"></button>
+                <button class="color-btn" data-color="#0000FF" style="background-color: #0000FF;"></button>
+                <button class="color-btn" data-color="#FFFF00" style="background-color: #FFFF00;"></button>
+                <button class="color-btn" data-color="#FF00FF" style="background-color: #FF00FF;"></button>
+                <button class="color-btn" data-color="#00FFFF" style="background-color: #00FFFF;"></button>
+            </div>
+            <div class="color-row">
+                <button class="color-btn" data-color="#800000" style="background-color: #800000;"></button>
+                <button class="color-btn" data-color="#008000" style="background-color: #008000;"></button>
+                <button class="color-btn" data-color="#000080" style="background-color: #000080;"></button>
+                <button class="color-btn" data-color="#808000" style="background-color: #808000;"></button>
+                <button class="color-btn" data-color="#800080" style="background-color: #800080;"></button>
+                <button class="color-btn" data-color="#008080" style="background-color: #008080;"></button>
+                <button class="color-btn" data-color="#C0C0C0" style="background-color: #C0C0C0;"></button>
+                <button class="color-btn" data-color="#808080" style="background-color: #808080;"></button>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span id="current-tool">Brush</span>
+            <span id="current-color" class="color-indicator"></span>
+            <span id="canvas-info">Ready</span>
+        </div>
+    </div>
+
+    <script src="../paint-logic.js" type="module"></script>
+</body>
+
+</html>
