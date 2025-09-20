@@ -1,0 +1,13 @@
+#startup-modal {
+    z-index: 10;
+}
+
+#startup-modal .window-body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 10px;
+    padding: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}

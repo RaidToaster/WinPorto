@@ -8,9 +8,9 @@ let nextWindowId = 1;
 let zIndexCounter = 0;
 const windowContainer = document.getElementById('window-container');
 
-function createWindow(title, content, iconUrl) {
+function createWindow(title, content, iconUrl, windowClass = '') {
     const windowEl = document.createElement('div');
-    windowEl.className = 'window';
+    windowEl.className = `window ${windowClass}`.trim();
     windowEl.style.left = `${50 + (windows.length % 10) * 30}px`;
     windowEl.style.top = `${50 + (windows.length % 10) * 30}px`;
 
@@ -34,15 +34,15 @@ function createWindow(title, content, iconUrl) {
 
     const minButton = document.createElement('button');
     minButton.className = 'title-button';
-    minButton.innerHTML = '<img src="../../icons/Minimize.png" alt="Minimize">';
+    minButton.innerHTML = '<img src="../../Windows XP Icons/Minimize.png" alt="Minimize">';
 
     const maxButton = document.createElement('button');
     maxButton.className = 'title-button';
-    maxButton.innerHTML = '<img src="../../icons/Maximize.png" alt="Maximize">';
+    maxButton.innerHTML = '<img src="../../Windows XP Icons/Maximize.png" alt="Maximize">';
 
     const closeButton = document.createElement('button');
     closeButton.className = 'title-button';
-    closeButton.innerHTML = '<img src="../../icons/Exit.png" alt="Close">';
+    closeButton.innerHTML = '<img src="../../Windows XP Icons/Exit.png" alt="Close">';
 
     titleButtons.appendChild(minButton);
     titleButtons.appendChild(maxButton);
@@ -67,7 +67,7 @@ function createWindow(title, content, iconUrl) {
 
         setActiveWindow(newWindow);
 
-        const onMouseMove = throttle(function(e) {
+        const onMouseMove = throttle(function (e) {
             if (isDragging) {
                 let newLeft = e.clientX - offsetX;
                 let newTop = e.clientY - offsetY;
@@ -336,8 +336,6 @@ function createWindow(title, content, iconUrl) {
 }
 
 function renderWindows() {
-    // This function is now largely obsolete as rendering is handled by the DOM.
-    // We might keep it for updating window states (e.g., active status).
     windows.forEach(win => {
         if (win === activeWindow) {
             win.el.classList.add('active');

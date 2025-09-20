@@ -4,10 +4,10 @@ import { isMenuOpen, toggleStartMenu } from './startMenu.js';
 
 const desktopIcons = document.getElementById('desktop-icons');
 const icons = [
-    { name: 'About Me', app: 'About Me', img: '../../icons/User Accounts.png', x: -50, y: 30 },
-    { name: 'Projects', app: 'Projects', img: '../../icons/Briefcase.png', x: -50, y: 120 },
-    { name: 'Contact', app: 'Contact', img: '../../icons/Email.png', x: -50, y: 210 },
-    { name: 'Explorer', app: 'Explorer', img: '../../icons/Explorer.png', x: -50, y: 300 },
+    { name: 'About Me', app: 'About Me', img: '../../Windows XP Icons/User Accounts.png', x: -50, y: 30 },
+    { name: 'Projects', app: 'Projects', img: '../../Windows XP Icons/Briefcase.png', x: -50, y: 120 },
+    { name: 'Contact', app: 'Contact', img: '../../Windows XP Icons/Email.png', x: -50, y: 210 },
+    { name: 'Explorer', app: 'Explorer', img: '../../Windows XP Icons/Explorer.png', x: -50, y: 300 },
 ];
 
 function isPositionOccupied(x, y, currentIconIndex) {

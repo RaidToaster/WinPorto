@@ -36,7 +36,7 @@ function renderStartMenu() {
     // Full-width header
     const header = document.createElement('div');
     header.className = 'menu-header';
-    header.innerHTML = '<img src="../../icons/User Accounts.png" alt="User"><span>Kevin P.M</span>';
+    header.innerHTML = '<img src="../../Windows XP Icons/User Accounts.png" alt="User"><span>Kevin P.M</span>';
     startMenu.appendChild(header);
 
     // Panels container for left and right side-by-side
@@ -137,7 +137,7 @@ function renderStartMenu() {
         { name: 'My Computer', icon: '../../Windows XP Icons/My Computer.png' },
         { name: 'Control Panel', icon: '../../Windows XP Icons/Control Panel.png' },
         { name: 'Connect To', icon: '../../Windows XP Icons/Entire Network.png' },
-        { name: 'Printers and Faxes', icon: '../../Windows XP Icons/Printers.png' },
+        { name: 'Printers and Faxes', icon: '../../Windows XP Icons/Printer.png' },
         { name: 'Help and Support', icon: '../../Windows XP Icons/Help and Support.png' },
         { name: 'Search', icon: '../../Windows XP Icons/Search.png' },
         { name: 'Run', icon: '../../Windows XP Icons/Run.png' }
@@ -162,10 +162,10 @@ function renderStartMenu() {
     const footer = document.createElement('div');
     footer.className = 'menu-footer';
     const logOffButton = document.createElement('button');
-    logOffButton.innerHTML = `<img src=icons/Log Off.png alt="Log Off"><span>Log off</span>`;
+    logOffButton.innerHTML = `<img src="../../Windows XP Icons/Logout.png" alt="Log Off"><span>Log Off</span>`;
     logOffButton.onclick = handleLogOff;
     const shutdownButton = document.createElement('button');
-    shutdownButton.innerHTML = `<img src=icons/Turn Off Computer.png alt="Turn Off"><span>Turn off computer</span>`;
+    shutdownButton.innerHTML = `<img src="../../Windows XP Icons/Power.png" alt="Turn Off"><span>Shut Down</span>`;
     shutdownButton.onclick = handleShutdown;
     footer.appendChild(logOffButton);
     footer.appendChild(shutdownButton);

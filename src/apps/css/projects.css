@@ -1,13 +1,223 @@
-body, html {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    background-color: #ECE9D8;
-    font-family: "Noto Sans TC", sans-serif;
+:root {
+    --background-color: #f4f4f5;
+    --card-background: #ffffff;
+    --close-button : red;
+    --text-color: #18181b;
+    --accent-color: #3b82f6;
+    --accent-hover: #2563eb;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --modal-backdrop: rgba(0, 0, 0, 0.5);
 }
 
-.padded-content {
-    padding: 10px;
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: var(--background-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    overflow: auto;
+}
+
+.projects-header {
+    text-align: center;
+    padding: 2rem 1rem;
+    border-bottom: 1px solid #e4e4e7;
+}
+
+.projects-header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.project-card {
+    background: var(--card-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px var(--shadow-color);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px var(--shadow-color);
+}
+
+.project-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+}
+
+.project-card-content {
+    padding: 1.5rem;
+}
+
+.project-card-content h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+}
+
+.project-card-content p {
+    margin: 0 0 1.5rem 0;
+    color: #71717a;
+}
+
+.project-card-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-hover);
+}
+
+.btn-secondary {
+    background-color: #e4e4e7;
+    color: var(--text-color);
+}
+
+.btn-secondary:hover {
+    background-color: #d4d4d8;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: var(--modal-backdrop);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    display: block;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--card-background);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 600px;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+.close-button {
+    color: var(--close-button);
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: var(--text-color);
+}
+
+#modal-img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
+#modal-title {
+    margin: 0 0 0.5rem 0;
+}
+
+#modal-description {
+    margin-bottom: 2rem;
+}
+
+.modal-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.modal-gallery {
+    margin-bottom: 1.5rem;
+}
+
+#modal-main-img {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.modal-thumbnails {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+}
+
+.modal-thumbnails img {
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border-color 0.3s ease;
+}
+
+.modal-thumbnails img:hover,
+.modal-thumbnails img.active {
+    border-color: var(--accent-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .projects-grid {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .modal-content {
+        margin: 20% auto;
+        width: 90%;
+    }
 }
