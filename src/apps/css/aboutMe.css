@@ -271,6 +271,33 @@ body {
     font-weight: 500;
 }
 
+.cv-download-button {
+    background: var(--secondary-color);
+    color: #fff !important;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9em;
+    font-weight: 600;
+    transition: background 0.3s, transform 0.2s;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
+    margin-top: 15px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.cv-download-button:hover {
+    background: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+.cv-download-container {
+    text-align: center;
+}
+
 /* Responsive Design */
 @media (max-width: 1200px) {
     .container {

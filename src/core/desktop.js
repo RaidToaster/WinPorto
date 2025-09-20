@@ -8,7 +8,8 @@ const icons = [
     { name: 'Projects', app: 'Projects', img: '../../Windows XP Icons/Briefcase.png', x: -50, y: 120 },
     { name: 'Contact', app: 'Contact', img: '../../Windows XP Icons/Email.png', x: -50, y: 210 },
     { name: 'Explorer', app: 'Explorer', img: '../../Windows XP Icons/Explorer.png', x: -50, y: 300 },
-    { name: 'Paint', app: 'Paint', img: '../../Windows XP Icons/Paint.png', x: -50, y: 390 }
+    { name: 'Paint', app: 'Paint', img: '../../Windows XP Icons/Paint.png', x: 29, y: 120 },
+    { name: 'CV', app: 'CV', img: '../../Windows XP Icons/Generic Text Document.png', x: 29, y: 30 }
 ];
 
 function isPositionOccupied(x, y, currentIconIndex) {
